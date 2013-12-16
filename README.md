@@ -1,4 +1,4 @@
-![Smart CUDA](logo.png)
+![Smart CUDA](https://github.com/markamo/Smart-Cuda/blob/gh-pages/logo.png)
 # Welcome to Smart CUDA Library Project Page
 
 ***
