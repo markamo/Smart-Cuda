@@ -1,0 +1,338 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Smart CUDA version 0.0.1 (draft) by markamo</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Smart CUDA version 0.0.1 (draft)</h1>
+        <p>Convenient CUDA wrappers for productive GPU programming</p>
+
+        <p class="view"><a href="https://github.com/markamo/Smart-Cuda">View the Project on GitHub <small>markamo/Smart-Cuda</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/markamo/Smart-Cuda/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/markamo/Smart-Cuda/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/markamo/Smart-Cuda">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="welcome-to-smart-cuda-library-project-page" class="anchor" href="#welcome-to-smart-cuda-library-project-page"><span class="octicon octicon-link"></span></a>Welcome to Smart CUDA Library Project Page</h1>
+
+<hr><p>Smart CUDA library is a lightweight C/C++ wrapper of the CUDA runtime API for productive natural-like CUDA programming. Smart CUDA follows the natural CUDA programming style; however, it provides low level abstraction to allow for a more convenient programming. In this way, Smart CUDA enhances developer productivity while attaining very high performance. Smart CUDA integrates seamlessly with C/C++ arrays and pointers, STL vector, and Thrust arrays. Smart CUDA only wraps the data on the device and host, therefore data on the host and device can have several wrappers and different views. This makes it very flexible, and allows easy integration with other platform and libraries.</p>
+
+<h1>
+<a name="why-smart-cuda-library" class="anchor" href="#why-smart-cuda-library"><span class="octicon octicon-link"></span></a>Why Smart CUDA library?</h1>
+
+<p>Even though I am relatively new to C/C++ and CUDA programming, I realized that a lightweight wrapper could boost gpu programming productivity. Thus, I developed several wrappers that preserved the natural programming style as I went through the CUDA Programming Guide. Smart CUDA is the compilation of the basic wrappers I have currently developed. Smart CUDA library is meant to complement the efforts of other libraries such as Thrust and Magma and help boost gpu programming productivity.</p>
+
+<hr><h1>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>FEATURES</h1>
+
+<h2>
+<a name="header-only-library" class="anchor" href="#header-only-library"><span class="octicon octicon-link"></span></a>Header-only library</h2>
+
+<div class="highlight highlight-C++"><pre><span class="cp">#include "smartCuda\smartCuda_001d.h" </span><span class="c1">////include smart cuda version 0.0.1 draft</span>
+
+</pre></div>
+
+<h2>
+<a name="minimal-learning" class="anchor" href="#minimal-learning"><span class="octicon octicon-link"></span></a>Minimal Learning</h2>
+
+<div class="highlight highlight-C++"><pre><span class="c1">//// memory and data allocation </span>
+<span class="c1">//// smartArray has overloads for allocating up to 4D data</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">int</span> <span class="n">mem_loc</span><span class="o">&gt;</span> 
+    <span class="kr">inline</span> <span class="n">T</span><span class="o">*</span> <span class="n">smartArray</span><span class="p">(</span> <span class="kt">int</span> <span class="n">sizeX</span><span class="p">,</span> <span class="n">cudaError_t</span> <span class="o">&amp;</span><span class="n">cudaStatus</span><span class="p">);</span>
+
+<span class="c1">//// smartArray wrapper wraps arrays on cpu and gpu memories for convenient access and management</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">int</span> <span class="n">mem_loc</span><span class="o">&gt;</span> 
+    <span class="k">class</span> <span class="nc">smartArrayWrapper</span><span class="p">{};</span>
+</pre></div>
+
+<hr><h1>
+<a name="smart-array" class="anchor" href="#smart-array"><span class="octicon octicon-link"></span></a>Smart Array</h1>
+
+<h2>
+<a name="easy-memory-allocation" class="anchor" href="#easy-memory-allocation"><span class="octicon octicon-link"></span></a>Easy Memory Allocation</h2>
+
+<div class="highlight highlight-C++"><pre><span class="n">cudaError_t</span> <span class="n">cudaStatus</span> <span class="o">=</span> <span class="n">cudaSuccess</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">arraySize</span> <span class="o">=</span> <span class="mi">100000</span><span class="p">;</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_a</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span> <span class="c1">////pageable host memory</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">hp_a</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartPinnedHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span> <span class="c1">////pinned host memory</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">d_a</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span> <span class="c1">////device memory </span>
+</pre></div>
+
+<h2>
+<a name="multidimensional-array-allocation-up-to-4d" class="anchor" href="#multidimensional-array-allocation-up-to-4d"><span class="octicon octicon-link"></span></a>Multidimensional array allocation (up to 4D)</h2>
+
+<div class="highlight highlight-C++"><pre><span class="k">const</span> <span class="kt">int</span> <span class="n">lenX</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">lenY</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">lenZ</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">lenW</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+<span class="c1">////allocation on CPU</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_1D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_2D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_3D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span> <span class="n">lenZ</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_4D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span> <span class="n">lenZ</span><span class="p">,</span> <span class="n">lenW</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
+
+<span class="c1">////allocation on GPU</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">d_1D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">d_2D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">d_3D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span> <span class="n">lenZ</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">d_4D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span> <span class="n">lenZ</span><span class="p">,</span> <span class="n">lenW</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
+</pre></div>
+
+<hr><h1>
+<a name="smart-array-wrapper" class="anchor" href="#smart-array-wrapper"><span class="octicon octicon-link"></span></a>Smart Array Wrapper</h1>
+
+<h2>
+<a name="convenient-wrapper-for-data-management" class="anchor" href="#convenient-wrapper-for-data-management"><span class="octicon octicon-link"></span></a>Convenient wrapper for data management</h2>
+
+<div class="highlight highlight-C++"><pre><span class="p">...</span>
+<span class="c1">////wrap array on host</span>
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span> <span class="n">wHa</span><span class="p">(</span><span class="n">h_a</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>  
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span> <span class="n">wHb</span><span class="p">(</span><span class="n">h_b</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span> <span class="n">wHc</span><span class="p">(</span><span class="n">h_c</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>
+
+<span class="c1">////wrap array on device</span>
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span> <span class="n">wDa</span><span class="p">(</span><span class="n">d_a</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span> <span class="n">wDb</span><span class="p">(</span><span class="n">d_b</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span> <span class="n">wDc</span><span class="p">(</span><span class="n">d_c</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>
+
+
+<span class="c1">////access the underlying array using the object.inner_ptr()</span>
+
+<span class="p">......</span>
+<span class="n">__global__</span> <span class="kt">void</span> <span class="n">addKernel</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">c</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">*</span><span class="n">b</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+    <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="n">i</span> <span class="o">+=</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">gridDim</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">....</span>
+<span class="c1">////access the underlying array using the object.inner_ptr()</span>
+<span class="n">addKernel</span><span class="o">&lt;&lt;&lt;</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">wDc</span><span class="p">.</span><span class="n">inner_ptr</span><span class="p">(),</span> <span class="n">wDa</span><span class="p">.</span><span class="n">inner_ptr</span><span class="p">(),</span> <span class="n">wDb</span><span class="p">.</span><span class="n">inner_ptr</span><span class="p">());</span>
+
+</pre></div>
+
+<h2>
+<a name="convenient-data-transfers-between-cpu-and-gpu" class="anchor" href="#convenient-data-transfers-between-cpu-and-gpu"><span class="octicon octicon-link"></span></a>Convenient data transfers between CPU and GPU</h2>
+
+<div class="highlight highlight-C++"><pre><span class="p">...</span>
+<span class="c1">////wrap array on host</span>
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span> <span class="n">wHa</span><span class="p">(</span><span class="n">h_a</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>  
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span> <span class="n">wHb</span><span class="p">(</span><span class="n">h_b</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span> <span class="n">wHc</span><span class="p">(</span><span class="n">h_c</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>
+
+<span class="c1">////wrap array on device</span>
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span> <span class="n">wDa</span><span class="p">(</span><span class="n">d_a</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span> <span class="n">wDb</span><span class="p">(</span><span class="n">d_b</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span> <span class="n">wDc</span><span class="p">(</span><span class="n">d_c</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>
+
+<span class="c1">////transfer data from host to device </span>
+<span class="n">wDa</span> <span class="o">=</span> <span class="n">wHa</span><span class="p">;</span> <span class="c1">////quick data transfer</span>
+
+<span class="c1">////copy method has extended support and overloads for other data types</span>
+<span class="n">wDb</span><span class="p">.</span><span class="n">copy</span><span class="p">(</span><span class="n">wHb</span><span class="p">);</span> 
+
+<span class="c1">////do some work on the GPU</span>
+
+
+<span class="c1">////transfer data back to CPU</span>
+<span class="n">wHc</span> <span class="o">=</span> <span class="n">wDc</span><span class="p">;</span> 
+
+</pre></div>
+
+<h2>
+<a name="local-and-global-scopes-for-automatic-memory-deallocation" class="anchor" href="#local-and-global-scopes-for-automatic-memory-deallocation"><span class="octicon octicon-link"></span></a>Local and Global scopes for automatic memory deallocation</h2>
+
+<div class="highlight highlight-C++"><pre><span class="p">...</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">arraySize</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_1</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span><span class="n">cudaStatus</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_2</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span><span class="n">cudaStatus</span><span class="p">);</span>
+<span class="p">{</span>
+    <span class="c1">////wrap host and device data</span>
+    <span class="c1">////use scopeLocal for managing data that is for local scopes</span>
+    <span class="c1">////memory is automatically freed when the wrapper goes out of scope    </span>
+    <span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span> <span class="n">wLocal</span><span class="p">(</span><span class="n">h_1</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span> 
+
+    <span class="p">...</span>
+    <span class="c1">////use scopeGlobal for managing data that is for global scopes</span>
+    <span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span> <span class="n">wGlobal</span><span class="p">(</span><span class="n">h_2</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeGlobal</span><span class="p">);</span>
+    <span class="p">....</span>
+    <span class="c1">/////do some work</span>
+    <span class="p">....</span>
+<span class="p">}</span><span class="c1">//// data for h_1 automatically deleted because it is local scope. </span>
+<span class="c1">//// data for h_2 is preserved because it is global to the scope created. </span>
+
+<span class="c1">//// h_1 must be reinitialized before used again</span>
+<span class="n">h_1</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span><span class="n">cudaStatus</span><span class="p">);</span>
+
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span> <span class="n">w2</span><span class="p">(</span><span class="n">h_1</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeGlobal</span><span class="p">);</span> 
+<span class="c1">////do some work</span>
+<span class="p">...</span>
+<span class="c1">////manual deletion of allocated memory</span>
+<span class="n">w2</span><span class="p">.</span><span class="n">destroy</span><span class="p">();</span>
+
+</pre></div>
+
+<h2>
+<a name="indexing-and-data-access-up-to-4d" class="anchor" href="#indexing-and-data-access-up-to-4d"><span class="octicon octicon-link"></span></a>Indexing and Data Access (up to 4D)</h2>
+
+<div class="highlight highlight-C++"><pre><span class="p">...</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">lenX</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">lenY</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span> <span class="n">wA</span><span class="p">(</span><span class="n">d_a</span><span class="p">,</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span> <span class="n">wB</span><span class="p">(</span><span class="n">d_b</span><span class="p">,</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span> <span class="n">wC</span><span class="p">(</span><span class="n">d_c</span><span class="p">,</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+
+<span class="c1">////the following gives the same results</span>
+<span class="c1">//// traditional CUDA style</span>
+<span class="c1">////d_c[i + j * lenX] = d_a[i + j * lenX] * d_b[i + j * lenX]; </span>
+<span class="c1">//// traditional CUDA style possible with smart array wrapper</span>
+<span class="c1">////wC[i + j * lenX] = wA[i + j * lenX] * wB[i + j * lenX]; </span>
+<span class="c1">////wC(i + j * lenX) = wA(i + j * lenX) * wB(i + j * lenX); </span>
+<span class="c1">////convenient indexing</span>
+<span class="n">wC</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">wA</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">*</span> <span class="n">wB</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span> 
+
+<span class="c1">////supports upto 4 dimensions </span>
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span> <span class="n">w4</span><span class="p">(</span><span class="n">d_a</span><span class="p">,</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span> <span class="n">lenZ</span><span class="p">,</span> <span class="n">lenW</span><span class="p">,</span> <span class="n">scopeLocal</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">results</span> <span class="o">=</span> <span class="n">w4</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">);</span>
+
+<span class="c1">////access the nth data element </span>
+<span class="kt">int</span> <span class="n">results</span> <span class="o">=</span> <span class="n">w4</span><span class="p">[</span><span class="mi">117</span><span class="p">];</span>
+
+</pre></div>
+
+<h2>
+<a name="customized-views-of-pre-allocated-dataup-to-4d" class="anchor" href="#customized-views-of-pre-allocated-dataup-to-4d"><span class="octicon octicon-link"></span></a>Customized Views of Pre-Allocated Data(up to 4D)</h2>
+
+<div class="highlight highlight-C++"><pre><span class="p">...</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">arraySize</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_1</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span><span class="n">cudaStatus</span><span class="p">);</span>
+<span class="p">...</span>
+<span class="c1">////wrap array on host</span>
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span> <span class="n">wView2D</span><span class="p">(</span><span class="n">h_1</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>  
+<span class="n">wView2D</span><span class="p">.</span><span class="n">setViewDim</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span> <span class="c1">//// view 1D array as a 2D 100 * 10 array</span>
+<span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">wView2D</span><span class="p">.</span><span class="n">ViewAt</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">5</span><span class="p">);</span> <span class="c1">//// get data at 50,10 of the view (up to 4D view)</span>
+<span class="kt">int</span> <span class="n">temp2</span> <span class="o">=</span> <span class="n">wView2D</span><span class="p">.</span><span class="n">ViewAt_2D</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="c1">//// alternative view method (only 2D view)</span>
+
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span> <span class="n">wView3D</span><span class="p">(</span><span class="n">h_1</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>
+<span class="n">wView3D</span><span class="p">.</span><span class="n">setViewDim</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span> <span class="c1">//// view 1D array as a 3D 10 * 10 * 10 array</span>
+<span class="kt">int</span> <span class="n">temp3</span> <span class="o">=</span> <span class="n">wView3D</span><span class="p">.</span><span class="n">ViewAt</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">);</span> <span class="c1">//// get data at 5,5,5 of the view (up to 4D view)</span>
+<span class="kt">int</span> <span class="n">temp4</span> <span class="o">=</span> <span class="n">wView3D</span><span class="p">.</span><span class="n">ViewAt_3D</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="c1">//// alternative view method (only 3D view)</span>
+
+<span class="c1">////access the original array </span>
+<span class="c1">//// the setViewDim and viewAt methods do not modify the layout of the array</span>
+<span class="kt">int</span> <span class="n">temp5</span> <span class="o">=</span> <span class="n">wWiew3D</span><span class="p">[</span><span class="mi">150</span><span class="p">];</span> <span class="c1">////access the original h_1 array at index 150 using []</span>
+<span class="kt">int</span> <span class="n">temp6</span> <span class="o">=</span> <span class="n">wWiew2D</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span> <span class="c1">////access the original h_1 array at index 300 using ()</span>
+<span class="p">...</span>
+</pre></div>
+
+<h2>
+<a name="navigation-up-to-4d-indexing" class="anchor" href="#navigation-up-to-4d-indexing"><span class="octicon octicon-link"></span></a>Navigation (up to 4D indexing)</h2>
+
+<p>** Navigation using PEEK, SEEK, and ADV(advance)**</p>
+
+<div class="highlight highlight-C++"><pre><span class="p">...</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">arraySize</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">d_1</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span><span class="n">cudaStatus</span><span class="p">);</span>
+<span class="p">...</span>
+<span class="c1">////wrap array on device</span>
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span> <span class="n">wNav</span><span class="p">(</span><span class="n">d_1</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>  
+<span class="p">...</span>
+<span class="c1">////navigate through the data </span>
+<span class="c1">////peek examples</span>
+<span class="kt">int</span> <span class="n">peek1</span> <span class="o">=</span> <span class="n">wNav</span><span class="p">.</span><span class="n">peek</span><span class="p">();</span> <span class="c1">////get the next data without moving the data access position</span>
+<span class="kt">int</span> <span class="n">peek5</span> <span class="o">=</span> <span class="n">wNav</span><span class="p">.</span><span class="n">peek</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span> <span class="c1">////get the next 5th position data without moving the data access position</span>
+<span class="kt">int</span> <span class="n">peek_3</span> <span class="o">=</span> <span class="n">wNav</span><span class="p">.</span><span class="n">peek</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">);</span> <span class="c1">////get the previous 3rd position data without moving the data access position</span>
+<span class="p">...</span>
+<span class="c1">////adv examples</span>
+<span class="kt">int</span> <span class="n">adv1</span><span class="o">=</span> <span class="n">wNav</span><span class="p">.</span><span class="n">seek</span><span class="p">();</span> <span class="c1">////move to the next data and return a reference to the data</span>
+<span class="kt">int</span> <span class="n">adv5</span> <span class="o">=</span> <span class="n">wNav</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span> <span class="c1">////move to the next 5th position data and return a reference</span>
+<span class="kt">int</span> <span class="n">adv_3</span> <span class="o">=</span> <span class="n">wNav</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">);</span> <span class="c1">////move to the previous 3rd position data and return a reference</span>
+
+<span class="p">...</span>
+<span class="c1">////seek examples</span>
+<span class="kt">int</span> <span class="n">seek1</span> <span class="o">=</span> <span class="n">wNav</span><span class="p">.</span><span class="n">seek</span><span class="p">();</span> <span class="c1">////move to the next data and return a reference to the data</span>
+<span class="kt">int</span> <span class="n">seek5</span> <span class="o">=</span> <span class="n">wNav</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span> <span class="c1">////move to the 5th position data and return a reference</span>
+<span class="kt">int</span> <span class="n">seek_3</span> <span class="o">=</span> <span class="n">wNav</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span> <span class="c1">////move to the 3rd position data and return a reference ////negative index not allow</span>
+
+<span class="p">....</span>
+<span class="c1">/////other peek, seek and adv methods</span>
+<span class="c1">////peek4(),seek4(),adv4() uses convenient indexing to navigate the data as above</span>
+<span class="kt">int</span> <span class="n">seek4</span> <span class="o">=</span> <span class="n">wNav</span><span class="p">.</span><span class="n">seek4</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span> <span class="c1">////move to the 2,5,1,3 position data and return a reference</span>
+<span class="kt">int</span> <span class="n">adv4</span> <span class="o">=</span> <span class="n">wNav</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="c1">////move to -3,1,2 position from the current index data and return a reference</span>
+<span class="kt">int</span> <span class="n">peek4</span> <span class="o">=</span> <span class="n">wNav</span><span class="p">.</span><span class="n">peek4</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">);</span> <span class="c1">////get the data at index 5,7 from the current position without moving the data access position</span>
+<span class="p">...</span>
+<span class="c1">/////other navigation methods</span>
+<span class="kt">int</span> <span class="n">nav_ref</span> <span class="o">=</span> <span class="n">wNav</span><span class="o">++</span><span class="p">;</span> <span class="c1">////returns a reference to the next data element and increases the data access index</span>
+<span class="kt">int</span> <span class="n">nav</span> <span class="o">=</span> <span class="o">++</span><span class="n">wNav</span><span class="p">;</span> <span class="c1">////returns the value of the next data element and increases the data access index</span>
+
+<span class="kt">int</span> <span class="n">nav_ref1</span> <span class="o">=</span> <span class="n">wNav</span><span class="o">--</span><span class="p">;</span> <span class="c1">////returns a reference to the previous data element and decreases the data access index</span>
+<span class="kt">int</span> <span class="n">nav1</span> <span class="o">=</span> <span class="o">--</span><span class="n">wNav</span><span class="p">;</span> <span class="c1">////returns the value of the previous data element and decreases the data access index</span>
+
+
+</pre></div>
+
+<hr><h1>
+<a name="latest-news" class="anchor" href="#latest-news"><span class="octicon octicon-link"></span></a>Latest News</h1>
+
+<p>*SmartCUDA v 0.0.1(draft-release) - 16th December, 2013</p>
+
+<h3>
+<a name="features-under-consideration-for-future-releases" class="anchor" href="#features-under-consideration-for-future-releases"><span class="octicon octicon-link"></span></a>Features under consideration for future releases</h3>
+
+<ul>
+<li>[ ] Smart Kernel</li>
+<li>[ ] Smart Device</li>
+<li>[ ] SmartArrayWrapper.apply_func()</li>
+<li>[ ] SmartArrayWrapper.apply_funcAsync()</li>
+<li>[ ] SmartArrayWrapper.sort()</li>
+<li>[ ] SmartArrayWrapper.sortAsync()</li>
+<li>[ ] SmartArrayWrapper.reduce()</li>
+<li>[ ] SmartArrayWrapper.scan()</li>
+<li>[ ] Smart Array Wrapper basic mathematical operators</li>
+<li>[ ] Basic integration with STL::array and STL::vector</li>
+<li>[ ] Basic integration with Thrust::host_vector and Thrust::device_vector</li>
+<li>[ ] Basic integration with OpenCL, OpenMP, TBB, and C++ AMP </li>
+<li>[ ] Integration with other CUDA libraries </li>
+<li>[ ] Multi-Host and Multi-Device data allocation and management</li>
+<li>[ ] Etc.</li>
+</ul><h3>
+<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+
+<p>The original creator of Smart CUDA is Mark Amo-Boateng (<a href="https://github.com/markamo" class="user-mention">@markamo</a>). </p>
+
+<h3>
+<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+
+<p>Having trouble with Smart CUDA? Check out the documentation at <a href="https://github.com/markamo/Smart-Cuda">https://github.com/markamo/Smart-Cuda</a> or contact <a href="mailto:smartcuda@outlook.com">smartcuda@outlook.com</a> and we’ll help you sort it out.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/markamo">markamo</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
