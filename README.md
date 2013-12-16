@@ -1,3 +1,4 @@
+![Smart CUDA](logo.png)
 # Welcome to Smart CUDA Library Project Page
 
 ***
@@ -276,4 +277,4 @@ int nav1 = --wNav; ////returns the value of the previous data element and decrea
 The original creator of Smart CUDA is Mark Amo-Boateng (@markamo). 
 
 ### Support or Contact
-Having trouble with Smart CUDA? Check out the documentation at https://github.com/markamo/Smart-Cuda or contact smartcuda@outlook.com and we’ll help you sort it out.
+Having trouble with Smart CUDA? Check out the documentation at http://markamo.github.io/Smart-Cuda/ or https://github.com/markamo/Smart-Cuda or contact smartcuda@outlook.com and we’ll help you sort it out.
