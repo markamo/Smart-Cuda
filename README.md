@@ -1,40 +1,45 @@
-Smart-Cuda
-==========
+# Welcome to Smart CUDA Library Project Page
 
-Convenient CUDA wrappers for easy GPU programming
+***
+
 Smart CUDA library is a lightweight C/C++ wrapper of the CUDA runtime API for productive natural-like CUDA programming. Smart CUDA follows the natural CUDA programming style; however, it provides low level abstraction to allow for a more convenient programming. In this way, Smart CUDA enhances developer productivity while attaining very high performance. Smart CUDA integrates seamlessly with C/C++ arrays and pointers, STL vector, and Thrust arrays. Smart CUDA only wraps the data on the device and host, therefore data on the host and device can have several wrappers and different views. This makes it very flexible, and allows easy integration with other platform and libraries.
 
-Why Smart CUDA library?
-
+# Why Smart CUDA library? 
 Even though I am relatively new to C/C++ and CUDA programming, I realized that a lightweight wrapper could boost gpu programming productivity. Thus, I developed several wrappers that preserved the natural programming style as I went through the CUDA Programming Guide. Smart CUDA is the compilation of the basic wrappers I have currently developed. Smart CUDA library is meant to complement the efforts of other libraries such as Thrust and Magma and help boost gpu programming productivity.
 
-FEATURES
+***
 
-Header-only library
+# FEATURES
 
+## Header-only library
+```C++
 #include "smartCuda\smartCuda_001d.h" ////include smart cuda version 0.0.1 draft
 
-Minimal Learning
-
+```
+## Minimal Learning
+```C++
 //// memory and data allocation 
 //// smartArray has overloads for allocating up to 4D data
 template <typename T, int mem_loc> 
-    inline T* smartArray( int sizeX, cudaError_t &cudaStatus);
+	inline T* smartArray( int sizeX, cudaError_t &cudaStatus);
 
 //// smartArray wrapper wraps arrays on cpu and gpu memories for convenient access and management
 template <typename T, int mem_loc> 
-    class smartArrayWrapper{};
-Smart Array
-
-Easy Memory Allocation
-
+	class smartArrayWrapper{};
+```
+***
+# Smart Array
+## Easy Memory Allocation
+```C++
 cudaError_t cudaStatus = cudaSuccess;
 const int arraySize = 100000;
 int* h_a = smartArray<int,smartHost>(arraySize, cudaStatus); ////pageable host memory
 int* hp_a = smartArray<int,smartPinnedHost>(arraySize, cudaStatus); ////pinned host memory
 int* d_a = smartArray<int,smartDevice>(arraySize, cudaStatus); ////device memory 
-Multidimensional array allocation (up to 4D)
+```
 
+## Multidimensional array allocation (up to 4D)
+```C++
 const int lenX = 10;
 const int lenY = 20;
 const int lenZ = 5;
@@ -51,10 +56,12 @@ int* d_1D = smartArray<int,smartDevice>(lenX, cudaStatus);
 int* d_2D = smartArray<int,smartDevice>(lenX, lenY, cudaStatus);
 int* d_3D = smartArray<int,smartDevice>(lenX, lenY, lenZ, cudaStatus);
 int* d_4D = smartArray<int,smartDevice>(lenX, lenY, lenZ, lenW, cudaStatus);
-Smart Array Wrapper
+```
+***
 
-Convenient wrapper for data management
-
+# Smart Array Wrapper
+## Convenient wrapper for data management
+```C++
 ...
 ////wrap array on host
 smartArrayWrapper<int,smartHost> wHa(h_a,arraySize,scopeLocal);  
@@ -72,17 +79,20 @@ smartArrayWrapper<int,smartDevice> wDc(d_c,arraySize,scopeLocal);
 ......
 __global__ void addKernel(int *c, const int *a, const int *b)
 {
-    int i = threadIdx.x + blockIdx.x * blockDim.x;
+	int i = threadIdx.x + blockIdx.x * blockDim.x;
     c[i] = a[i] + b[i];
-    i += blockDim.x * gridDim.x;
+	i += blockDim.x * gridDim.x;
 }
 
 ....
 ////access the underlying array using the object.inner_ptr()
 addKernel<<<16, 16>>>(wDc.inner_ptr(), wDa.inner_ptr(), wDb.inner_ptr());
 
-Convenient data transfers between CPU and GPU
+```
 
+
+## Convenient data transfers between CPU and GPU
+```C++
 ...
 ////wrap array on host
 smartArrayWrapper<int,smartHost> wHa(h_a,arraySize,scopeLocal);  
@@ -106,8 +116,10 @@ wDb.copy(wHb);
 ////transfer data back to CPU
 wHc = wDc; 
 
-Local and Global scopes for automatic memory deallocation
+```
 
+## Local and Global scopes for automatic memory deallocation
+```C++
 ...
 const int arraySize = 1000;
 int* h_1 = smartArray<int,smartHost>(arraySize,cudaStatus);
@@ -136,8 +148,10 @@ smartArrayWrapper<int,smartHost> w2(h_1,arraySize,scopeGlobal);
 ////manual deletion of allocated memory
 w2.destroy();
 
-Indexing and Data Access (up to 4D)
+```
 
+## Indexing and Data Access (up to 4D) 
+```C++
 ...
 const int lenX = 100;
 const int lenY = 100;
@@ -165,8 +179,11 @@ int results = w4(5,5,5,5);
 ////access the nth data element 
 int results = w4[117];
 
-Customized Views of Pre-Allocated Data(up to 4D)
+```
 
+
+## Customized Views of Pre-Allocated Data(up to 4D) 
+```C++
 ...
 const int arraySize = 1000;
 int* h_1 = smartArray<int,smartHost>(arraySize,cudaStatus);
@@ -187,10 +204,11 @@ int temp4 = wView3D.ViewAt_3D(4,5,2); //// alternative view method (only 3D view
 int temp5 = wWiew3D[150]; ////access the original h_1 array at index 150 using []
 int temp6 = wWiew2D(300); ////access the original h_1 array at index 300 using ()
 ...
-Navigation (up to 4D indexing)
+```
 
+## Navigation (up to 4D indexing) 
 ** Navigation using PEEK, SEEK, and ADV(advance)**
-
+```C++
 ...
 const int arraySize = 1000;
 int* d_1 = smartArray<int,smartDevice>(arraySize,cudaStatus);
@@ -230,30 +248,32 @@ int nav_ref1 = wNav--; ////returns a reference to the previous data element and 
 int nav1 = --wNav; ////returns the value of the previous data element and decreases the data access index
 
 
-Latest News
+```
+
+***
+
+# Latest News
 *SmartCUDA v 0.0.1(draft-release) - 16th December, 2013
 
-Features under consideration for future releases
+### Features under consideration for future releases
+- [ ] Smart Kernel
+- [ ] Smart Device
+- [ ] SmartArrayWrapper.apply_func()
+- [ ] SmartArrayWrapper.apply_funcAsync()
+- [ ] SmartArrayWrapper.sort()
+- [ ] SmartArrayWrapper.sortAsync()
+- [ ] SmartArrayWrapper.reduce()
+- [ ] SmartArrayWrapper.scan()
+- [ ] Smart Array Wrapper basic mathematical operators
+- [ ] Basic integration with STL::array and STL::vector
+- [ ] Basic integration with Thrust::host_vector and Thrust::device_vector
+- [ ] Basic integration with OpenCL, OpenMP, TBB, and C++ AMP 
+- [ ] Integration with other CUDA libraries 
+- [ ] Multi-Host and Multi-Device data allocation and management
+- [ ] Etc.
 
-[ ] Smart Kernel
-[ ] Smart Device
-[ ] SmartArrayWrapper.apply_func()
-[ ] SmartArrayWrapper.apply_funcAsync()
-[ ] SmartArrayWrapper.sort()
-[ ] SmartArrayWrapper.sortAsync()
-[ ] SmartArrayWrapper.reduce()
-[ ] SmartArrayWrapper.scan()
-[ ] Smart Array Wrapper basic mathematical operators
-[ ] Basic integration with STL::array and STL::vector
-[ ] Basic integration with Thrust::host_vector and Thrust::device_vector
-[ ] Basic integration with OpenCL, OpenMP, TBB, and C++ AMP
-[ ] Integration with other CUDA libraries
-[ ] Multi-Host and Multi-Device data allocation and management
-[ ] Etc.
-Authors and Contributors
+### Authors and Contributors
+The original creator of Smart CUDA is Mark Amo-Boateng (@markamo). 
 
-The original creator of Smart CUDA is Mark Amo-Boateng (@markamo).
-
-Support or Contact
-
-Having trouble with Smart CUDA? Check out the documentation at http://markamo.github.io/Smart-Cuda/ or contact smartcuda@outlook.com and we’ll help you sort it out.
+### Support or Contact
+Having trouble with Smart CUDA? Check out the documentation at https://github.com/markamo/Smart-Cuda or contact smartcuda@outlook.com and we’ll help you sort it out.
