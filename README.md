@@ -18,6 +18,8 @@ Even though I am relatively new to C/C++ and CUDA programming, I realized that a
 
 ```
 ## Minimal Learning
+**Only two things to learn: Smart Array and Smart Array Wrapper.** The Smart Array is for data allocation and Smart Array Wrapper is for management of allocated data.
+
 ```C++
 //// memory and data allocation 
 //// smartArray has overloads for allocating up to 4D data
@@ -74,6 +76,10 @@ smartArrayWrapper<int,smartDevice> wDa(d_a,arraySize,scopeLocal);
 smartArrayWrapper<int,smartDevice> wDb(d_b,arraySize,scopeLocal);
 smartArrayWrapper<int,smartDevice> wDc(d_c,arraySize,scopeLocal);
 
+/////alternative wrap method
+smartArrayWrapper<int,smartHost> wHa1;
+wHa1.wrap(h_a,arraySize,scopeGlobal);
+...
 
 ////access the underlying array using the object.inner_ptr()
 
@@ -92,7 +98,7 @@ addKernel<<<16, 16>>>(wDc.inner_ptr(), wDa.inner_ptr(), wDb.inner_ptr());
 ```
 
 
-## Convenient data transfers between CPU and GPU
+## Seamless data transfers between CPU and GPU
 ```C++
 ...
 ////wrap array on host
@@ -110,7 +116,10 @@ wDa = wHa; ////quick data transfer
 
 ////copy method has extended support and overloads for other data types
 wDb.copy(wHb); 
-
+...
+wDa.copy(wHa.inner_ptr(),wHa.getlen(),wHa.getType());
+wDb.copy(wHb.inner_ptr(),wHb.getlen(),wHb.getType());
+....
 ////do some work on the GPU
 
 
