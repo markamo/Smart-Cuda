@@ -15,7 +15,6 @@
   <body>
     <div class="wrapper">
       <header>
-        <p><img src="logo.png" alt="Smart CUDA"></p>
         <h1>Smart CUDA version 0.0.1 (draft)</h1>
         <p>Convenient CUDA wrappers for productive GPU programming</p>
 
@@ -39,7 +38,7 @@
 <h1>
 <a name="why-smart-cuda-library" class="anchor" href="#why-smart-cuda-library"><span class="octicon octicon-link"></span></a>Why Smart CUDA library?</h1>
 
-<p>Even though I am relatively new to C/C++ and CUDA programming, I realized that a lightweight wrapper could boost gpu programming productivity. Thus, I developed several wrappers that preserved the natural programming style as I went through the CUDA Programming Guide. Smart CUDA is the compilation of the basic wrappers I have currently developed. Smart CUDA library is meant to complement the efforts of other libraries such as Thrust and Magma and help boost gpu programming productivity.</p>
+<p>Even though I am relatively new to C/C++ and CUDA programming, I realized that a lightweight wrapper could boost gpu programming productivity. Thus, I developed several wrappers that preserved the natural programming style as I went through the CUDA Programming Guide. Smart CUDA is the compilation of the basic wrappers I have currently developed. Smart CUDA library is meant to complement the efforts of other libraries such as <a href="http://thrust.github.io/">Thrust</a> and <a href="http://ddemidov.github.io/vexcl">VexCL</a> and help boost gpu programming productivity.</p>
 
 <hr><h1>
 <a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>FEATURES</h1>
@@ -172,6 +171,10 @@
 <h2>
 <a name="local-and-global-scopes-for-automatic-memory-deallocation" class="anchor" href="#local-and-global-scopes-for-automatic-memory-deallocation"><span class="octicon octicon-link"></span></a>Local and Global scopes for automatic memory deallocation</h2>
 
+<p><strong>scopeLocal</strong>: for Local scopes. 
+<strong>scopeGlobal</strong>: to persist data beyond the current scope. 
+<strong>__clean_globals = ON/OFF</strong>: to clean global wrapper data declared in current scope. </p>
+
 <div class="highlight highlight-C++"><pre><span class="p">...</span>
 <span class="k">const</span> <span class="kt">int</span> <span class="n">arraySize</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
 <span class="kt">int</span><span class="o">*</span> <span class="n">h_1</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span><span class="n">cudaStatus</span><span class="p">);</span>
@@ -200,6 +203,23 @@
 <span class="c1">////manual deletion of allocated memory</span>
 <span class="n">w2</span><span class="p">.</span><span class="n">destroy</span><span class="p">();</span>
 
+<span class="p">....</span>
+<span class="c1">////use __clean_globals = ON/OFF to clean global scope wrappers when they get out of their current scope</span>
+<span class="p">...</span>
+<span class="nl">Error:</span>
+    <span class="n">cudaFree</span><span class="p">(</span><span class="n">dev_c</span><span class="p">);</span>
+    <span class="n">cudaFree</span><span class="p">(</span><span class="n">dev_a</span><span class="p">);</span>
+    <span class="n">cudaFree</span><span class="p">(</span><span class="n">dev_b</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="n">cudaStatus</span><span class="p">;</span>
+
+<span class="c1">///// can be replaced by </span>
+<span class="p">...</span>
+<span class="nl">Error:</span>
+    <span class="n">__clean_globals</span> <span class="o">=</span> <span class="n">ON</span><span class="p">;</span> <span class="c1">//// delete global wrappers and their underlying data</span>
+   <span class="c1">//__clean_globals = OFF; //// preserve the data that the global wrappers are pointing to</span>
+
+    <span class="k">return</span> <span class="n">cudaStatus</span><span class="p">;</span>
 </pre></div>
 
 <h2>
@@ -235,7 +255,7 @@
 </pre></div>
 
 <h2>
-<a name="customized-views-of-pre-allocated-dataup-to-4d" class="anchor" href="#customized-views-of-pre-allocated-dataup-to-4d"><span class="octicon octicon-link"></span></a>Customized Views of Pre-Allocated Data(up to 4D)</h2>
+<a name="customized-views-of-pre-allocated-data-up-to-4d" class="anchor" href="#customized-views-of-pre-allocated-data-up-to-4d"><span class="octicon octicon-link"></span></a>Customized Views of Pre-Allocated Data (up to 4D)</h2>
 
 <div class="highlight highlight-C++"><pre><span class="p">...</span>
 <span class="k">const</span> <span class="kt">int</span> <span class="n">arraySize</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
@@ -262,7 +282,7 @@
 <h2>
 <a name="navigation-up-to-4d-indexing" class="anchor" href="#navigation-up-to-4d-indexing"><span class="octicon octicon-link"></span></a>Navigation (up to 4D indexing)</h2>
 
-<p>** Navigation using PEEK, SEEK, and ADV(advance)**</p>
+<p><strong>Navigation using PEEK, SEEK, and ADV(advance)</strong></p>
 
 <div class="highlight highlight-C++"><pre><span class="p">...</span>
 <span class="k">const</span> <span class="kt">int</span> <span class="n">arraySize</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
@@ -287,14 +307,49 @@
 <span class="kt">int</span> <span class="n">seek1</span> <span class="o">=</span> <span class="n">wNav</span><span class="p">.</span><span class="n">seek</span><span class="p">();</span> <span class="c1">////move to the next data and return a reference to the data</span>
 <span class="kt">int</span> <span class="n">seek5</span> <span class="o">=</span> <span class="n">wNav</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span> <span class="c1">////move to the 5th position data and return a reference</span>
 <span class="kt">int</span> <span class="n">seek_3</span> <span class="o">=</span> <span class="n">wNav</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span> <span class="c1">////move to the 3rd position data and return a reference ////negative index not allow</span>
+<span class="p">...</span>
 
-<span class="p">....</span>
+</pre></div>
+
+<p><strong>Navigation using PEEK4, SEEK4, and ADV4(advance4)</strong></p>
+
+<div class="highlight highlight-C++"><pre><span class="p">....</span>
 <span class="c1">/////other peek, seek and adv methods</span>
 <span class="c1">////peek4(),seek4(),adv4() uses convenient indexing to navigate the data as above</span>
 <span class="kt">int</span> <span class="n">seek4</span> <span class="o">=</span> <span class="n">wNav</span><span class="p">.</span><span class="n">seek4</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span> <span class="c1">////move to the 2,5,1,3 position data and return a reference</span>
-<span class="kt">int</span> <span class="n">adv4</span> <span class="o">=</span> <span class="n">wNav</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="c1">////move to -3,1,2 position from the current index data and return a reference</span>
+<span class="kt">int</span> <span class="n">adv4</span> <span class="o">=</span> <span class="n">wNav</span><span class="p">.</span><span class="n">adv4</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="c1">////move to -3,1,2 position from the current index data and return a reference</span>
 <span class="kt">int</span> <span class="n">peek4</span> <span class="o">=</span> <span class="n">wNav</span><span class="p">.</span><span class="n">peek4</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">);</span> <span class="c1">////get the data at index 5,7 from the current position without moving the data access position</span>
 <span class="p">...</span>
+
+</pre></div>
+
+<p><strong>Navigation on Customized Views VPEEK(),PEEK4(), VSEEK(), VSEEK4(), VADV(), and VADV4()</strong></p>
+
+<div class="highlight highlight-C++"><pre><span class="p">....</span>
+<span class="c1">/////navigation on customized views: vpeek(), vseek() and vadv() methods</span>
+<span class="c1">////vpeek4(),vseek4(),vadv4() uses convenient indexing to navigate customized views</span>
+
+<span class="p">...</span>
+<span class="n">cvNav</span><span class="p">.</span><span class="n">setViewDim</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,...,...);</span> <span class="c1">//// set a customized array view </span>
+
+<span class="p">...</span>
+<span class="c1">/////navigating customized views</span>
+<span class="kt">int</span> <span class="n">cseek</span> <span class="o">=</span> <span class="n">cvNav</span><span class="p">.</span><span class="n">vseek</span><span class="p">();</span> <span class="c1">////move to the next data and return a reference to the data</span>
+<span class="kt">int</span> <span class="n">cadv</span> <span class="o">=</span> <span class="n">cvNav</span><span class="p">.</span><span class="n">vadv</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span> <span class="c1">////move to the 8th position data and return a reference</span>
+<span class="kt">int</span> <span class="n">cpeek</span> <span class="o">=</span> <span class="n">cvNav</span><span class="p">.</span><span class="n">vpeek</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span> <span class="c1">////return data value at position 3 from current location</span>
+
+<span class="p">...</span>
+<span class="c1">////multidimensional navigation of customized views</span>
+<span class="kt">int</span> <span class="n">cvseek4</span> <span class="o">=</span> <span class="n">cvNav</span><span class="p">.</span><span class="n">vseek4</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">);</span> <span class="c1">////move to the 2,1,4,6 of the customized array view</span>
+<span class="kt">int</span> <span class="n">cvadv4</span> <span class="o">=</span> <span class="n">cvNav</span><span class="p">.</span><span class="n">vadv4</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="c1">////move to 4,1,2 position from the current index data and return a reference</span>
+<span class="kt">int</span> <span class="n">cvpeek4</span> <span class="o">=</span> <span class="n">cvNav</span><span class="p">.</span><span class="n">vpeek4</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span> <span class="c1">////get the data at index 3,3 from the current position from the customized view without moving the data access position</span>
+<span class="p">...</span>
+
+</pre></div>
+
+<p><strong>Navigation using ++ and --</strong></p>
+
+<div class="highlight highlight-C++"><pre><span class="p">....</span>
 <span class="c1">/////other navigation methods</span>
 <span class="kt">int</span> <span class="n">nav_ref</span> <span class="o">=</span> <span class="n">wNav</span><span class="o">++</span><span class="p">;</span> <span class="c1">////returns a reference to the next data element and increases the data access index</span>
 <span class="kt">int</span> <span class="n">nav</span> <span class="o">=</span> <span class="o">++</span><span class="n">wNav</span><span class="p">;</span> <span class="c1">////returns the value of the next data element and increases the data access index</span>
@@ -308,9 +363,9 @@
 <hr><h1>
 <a name="latest-news" class="anchor" href="#latest-news"><span class="octicon octicon-link"></span></a>Latest News</h1>
 
-<p>*SmartCUDA v 0.0.1(draft-release) - 16th December, 2013</p>
-
-<h3>
+<ul>
+<li>SmartCUDA v 0.0.1(draft-release) - 16th December, 2013</li>
+</ul><h3>
 <a name="features-under-consideration-for-future-releases" class="anchor" href="#features-under-consideration-for-future-releases"><span class="octicon octicon-link"></span></a>Features under consideration for future releases</h3>
 
 <ul>
@@ -323,8 +378,8 @@
 <li>[ ] SmartArrayWrapper.reduce()</li>
 <li>[ ] SmartArrayWrapper.scan()</li>
 <li>[ ] Smart Array Wrapper basic mathematical operators</li>
-<li>[ ] Basic integration with STL::array and STL::vector</li>
-<li>[ ] Basic integration with Thrust::host_vector and Thrust::device_vector</li>
+<li>[ ] Full integration with STL::array and STL::vector</li>
+<li>[ ] Full integration with Thrust::host_vector and Thrust::device_vector</li>
 <li>[ ] Basic integration with OpenCL, OpenMP, TBB, and C++ AMP </li>
 <li>[ ] Integration with other CUDA libraries </li>
 <li>[ ] Multi-Host and Multi-Device data allocation and management</li>
