@@ -15,7 +15,6 @@
   <body>
     <div class="wrapper">
       <header>
-        <p><img src="logo.png" alt="Smart CUDA"></p>
         <h1>Smart CUDA version 0.0.1 (draft)</h1>
         <p>Convenient CUDA wrappers for productive GPU programming</p>
 
@@ -117,6 +116,10 @@
 <span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span> <span class="n">wDb</span><span class="p">(</span><span class="n">d_b</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>
 <span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span> <span class="n">wDc</span><span class="p">(</span><span class="n">d_c</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>
 
+<span class="c1">/////alternative wrap method</span>
+<span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span> <span class="n">wHa1</span><span class="p">;</span>
+<span class="n">wHa1</span><span class="p">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">h_a</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeGlobal</span><span class="p">);</span>
+<span class="p">...</span>
 
 <span class="c1">////access the underlying array using the object.inner_ptr()</span>
 
@@ -135,7 +138,7 @@
 </pre></div>
 
 <h2>
-<a name="convenient-data-transfers-between-cpu-and-gpu" class="anchor" href="#convenient-data-transfers-between-cpu-and-gpu"><span class="octicon octicon-link"></span></a>Seamless data transfers between CPU and GPU</h2>
+<a name="seamless-data-transfers-between-cpu-and-gpu" class="anchor" href="#seamless-data-transfers-between-cpu-and-gpu"><span class="octicon octicon-link"></span></a>Seamless data transfers between CPU and GPU</h2>
 
 <div class="highlight highlight-C++"><pre><span class="p">...</span>
 <span class="c1">////wrap array on host</span>
@@ -338,6 +341,16 @@
       </footer>
     </div>
     <script src="javascripts/scale.fix.js"></script>
-    
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-46530332-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
   </body>
 </html>
