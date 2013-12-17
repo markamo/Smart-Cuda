@@ -15,7 +15,6 @@
   <body>
     <div class="wrapper">
       <header>
-        <p><img src="logo.png" alt="Smart CUDA"></p>
         <h1>Smart CUDA version 0.0.1 (draft)</h1>
         <p>Convenient CUDA wrappers for productive GPU programming</p>
 
@@ -157,7 +156,10 @@
 
 <span class="c1">////copy method has extended support and overloads for other data types</span>
 <span class="n">wDb</span><span class="p">.</span><span class="n">copy</span><span class="p">(</span><span class="n">wHb</span><span class="p">);</span> 
-
+<span class="p">...</span>
+<span class="n">wDa</span><span class="p">.</span><span class="n">copy</span><span class="p">(</span><span class="n">wHa</span><span class="p">.</span><span class="n">inner_ptr</span><span class="p">(),</span><span class="n">wHa</span><span class="p">.</span><span class="n">getlen</span><span class="p">(),</span><span class="n">wHa</span><span class="p">.</span><span class="n">getType</span><span class="p">());</span>
+<span class="n">wDb</span><span class="p">.</span><span class="n">copy</span><span class="p">(</span><span class="n">wHb</span><span class="p">.</span><span class="n">inner_ptr</span><span class="p">(),</span><span class="n">wHb</span><span class="p">.</span><span class="n">getlen</span><span class="p">(),</span><span class="n">wHb</span><span class="p">.</span><span class="n">getType</span><span class="p">());</span>
+<span class="p">....</span>
 <span class="c1">////do some work on the GPU</span>
 
 
