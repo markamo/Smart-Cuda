@@ -6,7 +6,7 @@
 Smart CUDA library is a lightweight C/C++ wrapper of the CUDA runtime API for productive natural-like CUDA programming. Smart CUDA follows the natural CUDA programming style; however, it provides low level abstraction to allow for a more convenient programming. In this way, Smart CUDA enhances developer productivity while attaining very high performance. Smart CUDA integrates seamlessly with C/C++ arrays and pointers, STL vector, and Thrust arrays. Smart CUDA only wraps the data on the device and host, therefore data on the host and device can have several wrappers and different views. This makes it very flexible, and allows easy integration with other platform and libraries.
 
 # Why Smart CUDA library? 
-Even though I am relatively new to C/C++ and CUDA programming, I realized that a lightweight wrapper could boost gpu programming productivity. Thus, I developed several wrappers that preserved the natural programming style as I went through the CUDA Programming Guide. Smart CUDA is the compilation of the basic wrappers I have currently developed. Smart CUDA library is meant to complement the efforts of other libraries such as Thrust and Magma and help boost gpu programming productivity.
+Even though I am relatively new to C/C++ and CUDA programming, I realized that a lightweight wrapper could boost gpu programming productivity. Thus, I developed several wrappers that preserved the natural programming style as I went through the CUDA Programming Guide. Smart CUDA is the compilation of the basic wrappers I have currently developed. Smart CUDA library is meant to complement the efforts of other libraries such as [Thrust](http://thrust.github.io/) and [VexCL](http://ddemidov.github.io/vexcl) and help boost gpu programming productivity.
 
 ***
 
@@ -18,6 +18,8 @@ Even though I am relatively new to C/C++ and CUDA programming, I realized that a
 
 ```
 ## Minimal Learning
+**Only two things to learn: Smart Array and Smart Array Wrapper.** The Smart Array is for data allocation and Smart Array Wrapper is for management of allocated data.
+
 ```C++
 //// memory and data allocation 
 //// smartArray has overloads for allocating up to 4D data
@@ -74,6 +76,10 @@ smartArrayWrapper<int,smartDevice> wDa(d_a,arraySize,scopeLocal);
 smartArrayWrapper<int,smartDevice> wDb(d_b,arraySize,scopeLocal);
 smartArrayWrapper<int,smartDevice> wDc(d_c,arraySize,scopeLocal);
 
+/////alternative wrap method
+smartArrayWrapper<int,smartHost> wHa1;
+wHa1.wrap(h_a,arraySize,scopeGlobal);
+...
 
 ////access the underlying array using the object.inner_ptr()
 
@@ -92,7 +98,7 @@ addKernel<<<16, 16>>>(wDc.inner_ptr(), wDa.inner_ptr(), wDb.inner_ptr());
 ```
 
 
-## Convenient data transfers between CPU and GPU
+## Seamless data transfers between CPU and GPU
 ```C++
 ...
 ////wrap array on host
@@ -110,7 +116,10 @@ wDa = wHa; ////quick data transfer
 
 ////copy method has extended support and overloads for other data types
 wDb.copy(wHb); 
-
+...
+wDa.copy(wHa.inner_ptr(),wHa.getlen(),wHa.getType());
+wDb.copy(wHb.inner_ptr(),wHb.getlen(),wHb.getType());
+....
 ////do some work on the GPU
 
 
@@ -120,6 +129,9 @@ wHc = wDc;
 ```
 
 ## Local and Global scopes for automatic memory deallocation
+**scopeLocal**: for Local scopes. 
+**scopeGlobal**: to persist data beyond the current scope. 
+**__clean_globals = ON/OFF**: to clean global wrapper data declared in current scope. 
 ```C++
 ...
 const int arraySize = 1000;
@@ -149,6 +161,23 @@ smartArrayWrapper<int,smartHost> w2(h_1,arraySize,scopeGlobal);
 ////manual deletion of allocated memory
 w2.destroy();
 
+....
+////use __clean_globals = ON/OFF to clean global scope wrappers when they get out of their current scope
+...
+Error:
+    cudaFree(dev_c);
+    cudaFree(dev_a);
+    cudaFree(dev_b);
+    
+    return cudaStatus;
+
+///// can be replaced by 
+...
+Error:
+    __clean_globals = ON; //// delete global wrappers and their underlying data
+   //__clean_globals = OFF; //// preserve the data that the global wrappers are pointing to
+
+    return cudaStatus;
 ```
 
 ## Indexing and Data Access (up to 4D) 
@@ -183,7 +212,7 @@ int results = w4[117];
 ```
 
 
-## Customized Views of Pre-Allocated Data(up to 4D) 
+## Customized Views of Pre-Allocated Data (up to 4D) 
 ```C++
 ...
 const int arraySize = 1000;
@@ -208,7 +237,7 @@ int temp6 = wWiew2D(300); ////access the original h_1 array at index 300 using (
 ```
 
 ## Navigation (up to 4D indexing) 
-** Navigation using PEEK, SEEK, and ADV(advance)**
+**Navigation using PEEK, SEEK, and ADV(advance)**
 ```C++
 ...
 const int arraySize = 1000;
@@ -233,14 +262,49 @@ int adv_3 = wNav.seek(-3); ////move to the previous 3rd position data and return
 int seek1 = wNav.seek(); ////move to the next data and return a reference to the data
 int seek5 = wNav.seek(5); ////move to the 5th position data and return a reference
 int seek_3 = wNav.seek(3); ////move to the 3rd position data and return a reference ////negative index not allow
+...
 
+```
+
+**Navigation using PEEK4, SEEK4, and ADV4(advance4)**
+```C++
 ....
 /////other peek, seek and adv methods
 ////peek4(),seek4(),adv4() uses convenient indexing to navigate the data as above
 int seek4 = wNav.seek4(2,5,1,3); ////move to the 2,5,1,3 position data and return a reference
-int adv4 = wNav.seek(-3,1,2); ////move to -3,1,2 position from the current index data and return a reference
+int adv4 = wNav.adv4(-3,1,2); ////move to -3,1,2 position from the current index data and return a reference
 int peek4 = wNav.peek4(5,7); ////get the data at index 5,7 from the current position without moving the data access position
 ...
+
+```
+
+**Navigation on Customized Views VPEEK(), PEEK4(), VSEEK(), VSEEK4(), VADV(), and VADV4()**
+```C++
+....
+/////navigation on customized views: vpeek(), vseek() and vadv() methods
+////vpeek4(),vseek4(),vadv4() uses convenient indexing to navigate customized views
+
+...
+cvNav.setViewDim(10,10,...,...); //// set a customized array view 
+
+...
+/////navigating customized views
+int cseek = cvNav.vseek(); ////move to the next data and return a reference to the data
+int cadv = cvNav.vadv(8); ////move to the 8th position data and return a reference
+int cpeek = cvNav.vpeek(3); ////return data value at position 3 from current location
+
+...
+////multidimensional navigation of customized views
+int cvseek4 = cvNav.vseek4(2,1,4,6); ////move to the 2,1,4,6 of the customized array view
+int cvadv4 = cvNav.vadv4(4,1,2); ////move to 4,1,2 position from the current index data and return a reference
+int cvpeek4 = cvNav.vpeek4(3,3); ////get the data at index 3,3 from the current position from the customized view without moving the data access position
+...
+
+```
+
+**Navigation using ++ and --**
+```C++
+....
 /////other navigation methods
 int nav_ref = wNav++; ////returns a reference to the next data element and increases the data access index
 int nav = ++wNav; ////returns the value of the next data element and increases the data access index
@@ -254,7 +318,7 @@ int nav1 = --wNav; ////returns the value of the previous data element and decrea
 ***
 
 # Latest News
-*SmartCUDA v 0.0.1(draft-release) - 16th December, 2013
+* SmartCUDA v 0.0.1(draft-release) - 16th December, 2013
 
 ### Features under consideration for future releases
 - [ ] Smart Kernel
@@ -266,8 +330,8 @@ int nav1 = --wNav; ////returns the value of the previous data element and decrea
 - [ ] SmartArrayWrapper.reduce()
 - [ ] SmartArrayWrapper.scan()
 - [ ] Smart Array Wrapper basic mathematical operators
-- [ ] Basic integration with STL::array and STL::vector
-- [ ] Basic integration with Thrust::host_vector and Thrust::device_vector
+- [ ] Full integration with STL::array and STL::vector
+- [ ] Full integration with Thrust::host_vector and Thrust::device_vector
 - [ ] Basic integration with OpenCL, OpenMP, TBB, and C++ AMP 
 - [ ] Integration with other CUDA libraries 
 - [ ] Multi-Host and Multi-Device data allocation and management
