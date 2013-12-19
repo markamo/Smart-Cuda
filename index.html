@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Smart CUDA version 0.1.1 (initial release) by markamo</title>
+    <title>Smart CUDA version 0.1.2 (initial release) by markamo</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
@@ -15,8 +15,7 @@
   <body>
     <div class="wrapper">
       <header>
-        <p><img src="logo.png" alt="Smart CUDA"></p>
-        <h1>Smart CUDA version 0.1.1 (initial release)</h1>
+        <h1>Smart CUDA version 0.1.2 (initial release)</h1>
         <p>Convenient CUDA wrappers for productive GPU programming</p>
 
         <p class="view"><a href="https://github.com/markamo/Smart-Cuda">View the Project on GitHub <small>markamo/Smart-Cuda</small></a></p>
@@ -362,17 +361,82 @@
 </pre></div>
 
 <hr><h1>
+<a name="other-features" class="anchor" href="#other-features"><span class="octicon octicon-link"></span></a>Other Features</h1>
+
+<h2>
+<a name="smart-device-management" class="anchor" href="#smart-device-management"><span class="octicon octicon-link"></span></a>Smart Device Management</h2>
+
+<div class="highlight highlight-C++"><pre><span class="n">smartDeviceManager</span> <span class="n">dev</span><span class="p">;</span>
+<span class="n">dev</span><span class="p">.</span><span class="n">mapDevice</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">dev</span><span class="p">.</span><span class="n">setDevice</span><span class="p">();</span>
+<span class="p">....</span>
+<span class="n">dev</span><span class="p">.</span><span class="n">resetDevice</span><span class="p">();</span>
+</pre></div>
+
+<h2>
+<a name="smart-event-timings" class="anchor" href="#smart-event-timings"><span class="octicon octicon-link"></span></a>Smart Event Timings</h2>
+
+<div class="highlight highlight-C++"><pre><span class="n">smartEvent</span> <span class="n">stopwatch</span><span class="p">;</span>
+<span class="p">...</span>
+
+<span class="n">stopwatch</span><span class="p">.</span><span class="n">recStart</span><span class="p">();</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">arraySize</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">//// printf("index %d: %d + %d = %d\n", i, wHa[i],wHb[i], wHc[i]);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">wHc</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">wHc</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">wHa</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="n">wHb</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">stopwatch</span><span class="p">.</span><span class="n">recStop</span><span class="p">();</span>
+<span class="n">stopwatch</span><span class="p">.</span><span class="n">elapsedTime</span><span class="p">();</span>
+<span class="n">stopwatch</span><span class="p">.</span><span class="n">printElapsedTime</span><span class="p">();</span>
+
+
+</pre></div>
+
+<h2>
+<a name="array-initializations" class="anchor" href="#array-initializations"><span class="octicon octicon-link"></span></a>Array Initializations</h2>
+
+<div class="highlight highlight-C++"><pre>
+<span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">arraySize</span> <span class="o">=</span> <span class="mi">10000000</span><span class="p">;</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_a</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">hp_a</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartPinnedHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_b</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_c</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
+
+<span class="p">....</span>
+<span class="n">idx_initializeSmartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">h_a</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">idx_initializeSmartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">h_b</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">initializeSmartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">h_c</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">idx_initializeSmartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">hp_a</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">...</span>
+<span class="n">initializeSmartArrayAsync</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d_c</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="o">-</span><span class="mi">100</span><span class="p">);</span>
+</pre></div>
+
+<h2>
+<a name="smart-kernel-configuration-beta" class="anchor" href="#smart-kernel-configuration-beta"><span class="octicon octicon-link"></span></a>Smart Kernel Configuration (Beta)</h2>
+
+<div class="highlight highlight-C++"><pre><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">arraySize</span> <span class="o">=</span> <span class="mi">10000000</span><span class="p">;</span>
+<span class="p">....</span>
+<span class="n">smartConfig</span> <span class="n">config</span><span class="p">(</span><span class="n">arraySize</span><span class="p">);</span>
+<span class="n">addKernel</span><span class="o">&lt;&lt;&lt;</span><span class="n">config</span><span class="p">.</span><span class="n">getBlockSize</span><span class="p">(),</span> <span class="n">config</span><span class="p">.</span><span class="n">getThreadSize</span><span class="p">()</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">wDc</span><span class="p">.</span><span class="n">inner_ptr</span><span class="p">(),</span> <span class="n">wDa</span><span class="p">.</span><span class="n">inner_ptr</span><span class="p">(),</span> <span class="n">wDb</span><span class="p">.</span><span class="n">inner_ptr</span><span class="p">(),</span> <span class="n">arraySize</span><span class="p">);</span>
+
+</pre></div>
+
+<hr><h1>
 <a name="latest-news" class="anchor" href="#latest-news"><span class="octicon octicon-link"></span></a>Latest News</h1>
 
 <ul>
+<li><a href="https://github.com/markamo/Smart-Cuda/releases/tag/v0.1.2">Smart CUDA v0.1.2 (Initial Release) - 19th December, 2013</a></li>
 <li><a href="https://github.com/markamo/Smart-Cuda/releases/tag/v0.1.1">Smart CUDA v0.1.1 (Initial Release) -17th December, 2013</a></li>
 <li><a href="https://github.com/markamo/Smart-Cuda/releases/tag/v0.0.1d">SmartCUDA v 0.0.1(draft-release) - 16th December, 2013</a></li>
 </ul><h3>
 <a name="features-under-consideration-for-future-releases" class="anchor" href="#features-under-consideration-for-future-releases"><span class="octicon octicon-link"></span></a>Features under consideration for future releases</h3>
 
 <ul>
-<li>[ ] Smart Kernel</li>
-<li>[ ] Smart Device</li>
+<li>[-] Smart Kernel</li>
+<li>[-] Smart Device</li>
 <li>[ ] SmartArrayWrapper.apply_func()</li>
 <li>[ ] SmartArrayWrapper.apply_funcAsync()</li>
 <li>[ ] SmartArrayWrapper.sort()</li>
@@ -380,11 +444,11 @@
 <li>[ ] SmartArrayWrapper.reduce()</li>
 <li>[ ] SmartArrayWrapper.scan()</li>
 <li>[ ] Smart Array Wrapper basic mathematical operators</li>
-<li>[ ] Full integration with STL::array and STL::vector</li>
-<li>[ ] Full integration with Thrust::host_vector and Thrust::device_vector</li>
+<li>[-] Full integration with STL::array and STL::vector</li>
+<li>[-] Full integration with Thrust::host_vector and Thrust::device_vector</li>
 <li>[ ] Basic integration with OpenCL, OpenMP, TBB, and C++ AMP </li>
 <li>[ ] Integration with other CUDA libraries </li>
-<li>[ ] Multi-Host and Multi-Device data allocation and management</li>
+<li>[-] Multi-Host and Multi-Device data allocation and management</li>
 <li>[ ] Etc.</li>
 </ul><h3>
 <a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
@@ -394,7 +458,7 @@
 <h3>
 <a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
 
-<p>Having trouble with Smart CUDA? Check out the documentation at <a href="http://markamo.github.io/Smart-Cuda/">http://markamo.github.io/Smart-Cuda/</a> or <a href="https://github.com/markamo/Smart-Cuda">https://github.com/markamo/Smart-Cuda</a> or contact <a href="mailto:smartcuda@outlook.com">smartcuda@outlook.com</a> and we’ll help you sort it out.</p>
+<p>Having trouble with Smart CUDA? Check out this <a href="https://github.com/markamo/Smart-Cuda/wiki/Welcome-to-the-Smart-Cuda-v0.1.2-wiki!">Wiki</a>. Visit <a href="http://markamo.github.io/Smart-Cuda/">http://markamo.github.io/Smart-Cuda/</a> or <a href="https://github.com/markamo/Smart-Cuda">https://github.com/markamo/Smart-Cuda</a> for latest news and source codes. Feel free to contact <a href="mailto:smartcuda@outlook.com">smartcuda@outlook.com</a> for additional support.</p>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/markamo">markamo</a></p>
