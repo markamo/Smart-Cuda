@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Smart CUDA version 0.1.2 (initial release) by markamo</title>
+    <title>Smart CUDA version 0.2.0 (initial release) by markamo</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
@@ -15,18 +15,16 @@
   <body>
     <div class="wrapper">
       <header>
-      <p><img src="logo.png" alt="Smart CUDA"></p>
-        <h1>Smart CUDA version 0.1.2 (initial release)</h1>
+        <h1>Smart CUDA version 0.2.0 (initial release)</h1>
         <p>Convenient CUDA wrappers for productive GPU programming</p>
 
         <p class="view"><a href="https://github.com/markamo/Smart-Cuda">View the Project on GitHub <small>markamo/Smart-Cuda</small></a></p>
-      <p class="view"><a href="https://github.com/markamo/Smart-Cuda/wiki/Welcome-to-the-Smart-Cuda-v0.1.2-wiki!">See the Documentation <small>markamo/Smart-Cuda</small></a></p>
 
 
         <ul>
           <li><a href="https://github.com/markamo/Smart-Cuda/zipball/master">Download <strong>ZIP File</strong></a></li>
           <li><a href="https://github.com/markamo/Smart-Cuda/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/markamo/Smart-Cuda/releases/latest">Latest Release <strong> Ver. 0.1.2</strong></a></li>
+          <li><a href="https://github.com/markamo/Smart-Cuda">View On <strong>GitHub</strong></a></li>
         </ul>
       </header>
       <section>
@@ -48,7 +46,7 @@
 <h2>
 <a name="header-only-library" class="anchor" href="#header-only-library"><span class="octicon octicon-link"></span></a>Header-only library</h2>
 
-<div class="highlight highlight-C++"><pre><span class="cp">#include "smartCuda\smartCuda_011.h" </span><span class="c1">////include smart cuda version 0.0.1 draft</span>
+<div class="highlight highlight-C++"><pre><span class="cp">#include "smartCuda_lib\smartCuda.h" </span><span class="c1">////include current version of smartCuda</span>
 
 </pre></div>
 
@@ -59,6 +57,9 @@
 
 <div class="highlight highlight-C++"><pre><span class="c1">//// memory and data allocation </span>
 <span class="c1">//// smartArray has overloads for allocating up to 4D data</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">int</span> <span class="n">mem_loc</span><span class="o">&gt;</span> 
+    <span class="kr">inline</span> <span class="n">T</span><span class="o">*</span> <span class="n">smartArray</span><span class="p">(</span><span class="kt">int</span> <span class="n">sizeX</span><span class="p">);</span>
+
 <span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">int</span> <span class="n">mem_loc</span><span class="o">&gt;</span> 
     <span class="kr">inline</span> <span class="n">T</span><span class="o">*</span> <span class="n">smartArray</span><span class="p">(</span> <span class="kt">int</span> <span class="n">sizeX</span><span class="p">,</span> <span class="n">cudaError_t</span> <span class="o">&amp;</span><span class="n">cudaStatus</span><span class="p">);</span>
 
@@ -75,9 +76,9 @@
 
 <div class="highlight highlight-C++"><pre><span class="n">cudaError_t</span> <span class="n">cudaStatus</span> <span class="o">=</span> <span class="n">cudaSuccess</span><span class="p">;</span>
 <span class="k">const</span> <span class="kt">int</span> <span class="n">arraySize</span> <span class="o">=</span> <span class="mi">100000</span><span class="p">;</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">h_a</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span> <span class="c1">////pageable host memory</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">hp_a</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartPinnedHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span> <span class="c1">////pinned host memory</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">d_a</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span> <span class="c1">////device memory </span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_a</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">);</span> <span class="c1">////pageable host memory</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">hp_a</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartPinnedHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">);</span> <span class="c1">////pinned host memory</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">d_a</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">);</span> <span class="c1">////device memory </span>
 </pre></div>
 
 <h2>
@@ -89,16 +90,28 @@
 <span class="k">const</span> <span class="kt">int</span> <span class="n">lenW</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
 
 <span class="c1">////allocation on CPU</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">h_1D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">h_2D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">h_3D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span> <span class="n">lenZ</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">h_4D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span> <span class="n">lenZ</span><span class="p">,</span> <span class="n">lenW</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_1D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_2D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_3D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span> <span class="n">lenZ</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_4D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span> <span class="n">lenZ</span><span class="p">,</span> <span class="n">lenW</span><span class="p">);</span>
 
 <span class="c1">////allocation on GPU</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">d_1D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">d_2D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">d_3D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span> <span class="n">lenZ</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">d_4D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span> <span class="n">lenZ</span><span class="p">,</span> <span class="n">lenW</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">d_1D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">d_2D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">d_3D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span> <span class="n">lenZ</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">d_4D</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lenX</span><span class="p">,</span> <span class="n">lenY</span><span class="p">,</span> <span class="n">lenZ</span><span class="p">,</span> <span class="n">lenW</span><span class="p">);</span>
+
+<span class="c1">////use of inline array to allocate memory in kernels</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">arr</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartInlineArray</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arr_size</span><span class="p">);</span> <span class="c1">//create an inline array of size arr_size;</span>
+<span class="p">...</span>
+<span class="n">__global__</span> <span class="kt">void</span> <span class="n">testKernel</span><span class="p">(</span><span class="kt">int</span> <span class="n">arr_size</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span><span class="o">*</span> <span class="n">arr</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartInlineArray</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arr_size</span><span class="p">);</span> <span class="c1">//create an inline array of size arr_size;</span>
+    <span class="p">...</span>
+   <span class="n">smartInlineArrayFree</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
+
+<span class="p">}</span>
+<span class="p">...</span>
 </pre></div>
 
 <hr><h1>
@@ -179,8 +192,8 @@
 
 <div class="highlight highlight-C++"><pre><span class="p">...</span>
 <span class="k">const</span> <span class="kt">int</span> <span class="n">arraySize</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">h_1</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span><span class="n">cudaStatus</span><span class="p">);</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">h_2</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span><span class="n">cudaStatus</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_1</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_2</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">);</span>
 <span class="p">{</span>
     <span class="c1">////wrap host and device data</span>
     <span class="c1">////use scopeLocal for managing data that is for local scopes</span>
@@ -197,7 +210,7 @@
 <span class="c1">//// data for h_2 is preserved because it is global to the scope created. </span>
 
 <span class="c1">//// h_1 must be reinitialized before used again</span>
-<span class="n">h_1</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span><span class="n">cudaStatus</span><span class="p">);</span>
+<span class="n">h_1</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">);</span>
 
 <span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span> <span class="n">w2</span><span class="p">(</span><span class="n">h_1</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeGlobal</span><span class="p">);</span> 
 <span class="c1">////do some work</span>
@@ -222,6 +235,43 @@
    <span class="c1">//__clean_globals = OFF; //// preserve the data that the global wrappers are pointing to</span>
 
     <span class="k">return</span> <span class="n">cudaStatus</span><span class="p">;</span>
+</pre></div>
+
+<h2>
+<a name="aliases-for-thread-indexing" class="anchor" href="#aliases-for-thread-indexing"><span class="octicon octicon-link"></span></a>Aliases for Thread Indexing</h2>
+
+<div class="highlight highlight-C++"><pre><span class="c1">//// alias for __global__ </span>
+<span class="cp">#define __KERNEL__ __global__ </span>
+
+<span class="c1">////indexing along one dimension x,y,z = 0,1,2. default index is along the x dimension (0)</span>
+ <span class="c1">// alias for threadIdx.x;</span>
+<span class="n">__device__</span> <span class="kr">inline</span> <span class="kt">int</span> <span class="nf">__local_index</span><span class="p">(</span><span class="kt">int</span> <span class="n">dim</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+ <span class="c1">// alias for blockIdx.x * blockDim.x + threadIdx.x;</span>
+<span class="n">__device__</span> <span class="kr">inline</span> <span class="kt">int</span> <span class="nf">__global_index</span><span class="p">(</span><span class="kt">int</span> <span class="n">dim</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+ <span class="c1">// alias for blockIdx.x;</span>
+<span class="n">__device__</span> <span class="kr">inline</span> <span class="kt">int</span> <span class="nf">__block_index</span><span class="p">(</span><span class="kt">int</span> <span class="n">dim</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+<span class="n">__device__</span> <span class="kr">inline</span> <span class="kt">int</span> <span class="nf">__group_index</span><span class="p">(</span><span class="kt">int</span> <span class="n">dim</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+ <span class="c1">// alias for gridDim.x * blockDim.x;</span>
+<span class="n">__device__</span> <span class="kr">inline</span> <span class="kt">int</span> <span class="nf">__stride</span><span class="p">(</span><span class="kt">int</span> <span class="n">dim</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">////alias functions for size of threads and blocks along the x, y, z and total size in all dimensions (i.e. 0,1,2,-1). The default is the total size along all dimensions (-1).</span>
+
+ <span class="c1">// alias for gridDim.x;</span>
+<span class="n">__device__</span> <span class="kr">inline</span> <span class="kt">int</span> <span class="nf">__num_blocks</span><span class="p">(</span><span class="kt">int</span> <span class="n">dim</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="p">);</span>
+<span class="n">__device__</span> <span class="kr">inline</span> <span class="kt">int</span> <span class="nf">__num_groups</span><span class="p">(</span><span class="kt">int</span> <span class="n">dim</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+
+ <span class="c1">// alias for gridDim.x;</span>
+<span class="n">__device__</span> <span class="kr">inline</span> <span class="kt">int</span> <span class="nf">__block_size</span><span class="p">(</span><span class="kt">int</span> <span class="n">dim</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">__device__</span> <span class="kr">inline</span> <span class="kt">int</span> <span class="nf">__group_size</span><span class="p">(</span><span class="kt">int</span> <span class="n">dim</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">__device__</span> <span class="kr">inline</span> <span class="kt">int</span> <span class="nf">__local_size</span><span class="p">(</span><span class="kt">int</span> <span class="n">dim</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+
+ <span class="c1">// alias for gridDim.x * blockDim.x;</span>
+<span class="n">__device__</span> <span class="kr">inline</span> <span class="kt">int</span> <span class="nf">__launch_size</span><span class="p">(</span><span class="kt">int</span> <span class="n">dim</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">__device__</span> <span class="kr">inline</span> <span class="kt">int</span> <span class="nf">__global_size</span><span class="p">(</span><span class="kt">int</span> <span class="n">dim</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+
 </pre></div>
 
 <h2>
@@ -261,7 +311,7 @@
 
 <div class="highlight highlight-C++"><pre><span class="p">...</span>
 <span class="k">const</span> <span class="kt">int</span> <span class="n">arraySize</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">h_1</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span><span class="n">cudaStatus</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_1</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">);</span>
 <span class="p">...</span>
 <span class="c1">////wrap array on host</span>
 <span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span> <span class="n">wView2D</span><span class="p">(</span><span class="n">h_1</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>  
@@ -288,7 +338,7 @@
 
 <div class="highlight highlight-C++"><pre><span class="p">...</span>
 <span class="k">const</span> <span class="kt">int</span> <span class="n">arraySize</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">d_1</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span><span class="n">cudaStatus</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">d_1</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">);</span>
 <span class="p">...</span>
 <span class="c1">////wrap array on device</span>
 <span class="n">smartArrayWrapper</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartDevice</span><span class="o">&gt;</span> <span class="n">wNav</span><span class="p">(</span><span class="n">d_1</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="n">scopeLocal</span><span class="p">);</span>  
@@ -402,10 +452,10 @@
 
 <div class="highlight highlight-C++"><pre>
 <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">arraySize</span> <span class="o">=</span> <span class="mi">10000000</span><span class="p">;</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">h_a</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">hp_a</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartPinnedHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">h_b</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">h_c</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">,</span> <span class="n">cudaStatus</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_a</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">hp_a</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartPinnedHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_b</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">);</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">h_c</span> <span class="o">=</span> <span class="n">smartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">smartHost</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arraySize</span><span class="p">);</span>
 
 <span class="p">....</span>
 <span class="n">idx_initializeSmartArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">h_a</span><span class="p">,</span><span class="n">arraySize</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
@@ -426,10 +476,139 @@
 
 </pre></div>
 
-<hr><h1>
+<h2>
+<a name="smart-random-numbers-and-transformations" class="anchor" href="#smart-random-numbers-and-transformations"><span class="octicon octicon-link"></span></a>Smart Random Numbers and Transformations</h2>
+
+<ul>
+<li>New Kernel function <code>appy_func_core</code>, perform parallel element wise operations on allocated device arrays</li>
+</ul><div class="highlight highlight-C++"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Op</span><span class="o">&gt;</span> <span class="n">__global__</span>  
+<span class="kt">void</span> <span class="n">appy_func_core</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">dev_Array</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="n">Op</span> <span class="n">fn</span><span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Op</span><span class="o">&gt;</span> <span class="n">__global__</span>
+ <span class="kt">void</span> <span class="n">appy_func_core</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">dest</span><span class="p">,</span> <span class="n">T</span><span class="o">*</span> <span class="n">src</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="n">Op</span> <span class="n">fn</span><span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Op</span><span class="o">&gt;</span> <span class="n">__global__</span>
+ <span class="kt">void</span> <span class="n">appy_func_core</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">dest</span><span class="p">,</span> <span class="n">T</span><span class="o">*</span> <span class="n">src1</span><span class="p">,</span> <span class="n">T</span><span class="o">*</span> <span class="n">src2</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="n">Op</span> <span class="n">fn</span><span class="p">);</span>
+
+</pre></div>
+
+<ul>
+<li>New Kernel function <code>transform_core</code>, perform parallel element wise transformations on allocated device arrays. Supports up to 10 allocated device arrays</li>
+</ul><div class="highlight highlight-C++"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Op</span><span class="o">&gt;</span> <span class="n">__global__</span>
+ <span class="kt">void</span> <span class="n">transfrom_core</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">arr</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="n">Op</span> <span class="n">fn</span> <span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Op</span><span class="o">&gt;</span> <span class="n">__global__</span>
+ <span class="kt">void</span> <span class="n">transfrom_core</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">arr</span><span class="p">,</span> <span class="n">T</span><span class="o">*</span> <span class="n">arr1</span><span class="p">,</span> <span class="n">T</span><span class="o">*</span> <span class="n">arr2</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="n">Op</span> <span class="n">fn</span> <span class="p">);</span>
+
+<span class="p">...</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Op</span><span class="o">&gt;</span> <span class="n">__global__</span>
+ <span class="kt">void</span> <span class="n">transfrom_core</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">arr</span><span class="p">,</span> <span class="n">T</span><span class="o">*</span> <span class="n">arr1</span><span class="p">,</span> <span class="n">T</span><span class="o">*</span> <span class="n">arr2</span><span class="p">,</span> <span class="n">T</span><span class="o">*</span> <span class="n">arr3</span><span class="p">,</span> <span class="n">T</span><span class="o">*</span> <span class="n">arr4</span><span class="p">,</span>  <span class="n">T</span><span class="o">*</span> <span class="n">arr5</span><span class="p">,</span>  <span class="n">T</span><span class="o">*</span> <span class="n">arr6</span><span class="p">,</span> <span class="n">T</span><span class="o">*</span> <span class="n">arr7</span><span class="p">,</span> <span class="n">T</span><span class="o">*</span> <span class="n">arr8</span><span class="p">,</span> <span class="n">T</span><span class="o">*</span> <span class="n">arr9</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="n">Op</span> <span class="n">fn</span> <span class="p">);</span>
+
+<span class="p">...</span>
+
+</pre></div>
+
+<ul>
+<li>New Kernel function <code>transform_core_t</code>, perform parallel element wise transformations on allocated device arrays of different types. Supports up to 10 allocated device arrays and types</li>
+</ul><div class="highlight highlight-C++"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Op</span><span class="o">&gt;</span> <span class="n">__global__</span>
+ <span class="kt">void</span> <span class="kt">transfrom_core_t</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">arr</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="n">Op</span> <span class="n">fn</span> <span class="p">);</span>
+
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">T1</span><span class="p">,</span> <span class="k">typename</span> <span class="n">T2</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Op</span><span class="o">&gt;</span> <span class="n">__global__</span>
+ <span class="kt">void</span> <span class="kt">transfrom_core_t</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">arr</span><span class="p">,</span> <span class="n">T1</span><span class="o">*</span> <span class="n">arr1</span><span class="p">,</span> <span class="n">T2</span><span class="o">*</span> <span class="n">arr2</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="n">Op</span> <span class="n">fn</span> <span class="p">);</span>
+
+<span class="p">...</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">T1</span><span class="p">,</span> <span class="k">typename</span> <span class="n">T2</span><span class="p">,</span>  <span class="k">typename</span> <span class="n">T3</span><span class="p">,</span> <span class="k">typename</span> <span class="n">T4</span><span class="p">,</span> <span class="k">typename</span> <span class="n">T5</span><span class="p">,</span> <span class="k">typename</span> <span class="n">T6</span><span class="p">,</span> <span class="k">typename</span> <span class="n">T7</span><span class="p">,</span> <span class="k">typename</span> <span class="n">T8</span><span class="p">,</span> <span class="k">typename</span> <span class="n">T9</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Op</span><span class="o">&gt;</span> <span class="n">__global__</span>
+ <span class="kt">void</span> <span class="kt">transfrom_core_t</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">arr</span><span class="p">,</span> <span class="n">T1</span><span class="o">*</span> <span class="n">arr1</span><span class="p">,</span> <span class="n">T2</span><span class="o">*</span> <span class="n">arr2</span><span class="p">,</span> <span class="n">T3</span><span class="o">*</span> <span class="n">arr3</span><span class="p">,</span> <span class="n">T4</span><span class="o">*</span> <span class="n">arr4</span><span class="p">,</span>  <span class="n">T5</span><span class="o">*</span> <span class="n">arr5</span><span class="p">,</span>  <span class="n">T6</span><span class="o">*</span> <span class="n">arr6</span><span class="p">,</span> <span class="n">T7</span><span class="o">*</span> <span class="n">arr7</span><span class="p">,</span> <span class="n">T8</span><span class="o">*</span> <span class="n">arr8</span><span class="p">,</span> <span class="n">T9</span><span class="o">*</span> <span class="n">arr9</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="n">Op</span> <span class="n">fn</span> <span class="p">);</span>
+
+<span class="p">...</span>
+
+</pre></div>
+
+<ul>
+<li>Simple Reduction function and function operators for reductions on gpu. Customer implementation of smartOperator can be used with for the reduction kernel.</li>
+</ul><div class="highlight highlight-C++"><pre><span class="c1">////pre-defined operators</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">smartOperator</span><span class="p">;</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">smartPlus</span><span class="o">:</span> <span class="k">public</span> <span class="n">smartOperator</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">smartMultiply</span><span class="o">:</span> <span class="k">public</span> <span class="n">smartOperator</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">smartMax</span><span class="o">:</span> <span class="k">public</span> <span class="n">smartOperator</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">smartMin</span><span class="o">:</span> <span class="k">public</span> <span class="n">smartOperator</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">smartOR</span><span class="o">:</span> <span class="k">public</span> <span class="n">smartOperator</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">smartAND</span><span class="o">:</span> <span class="k">public</span> <span class="n">smartOperator</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="c1">////kernel launcher</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Op</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">smartReduce_kl</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">answer</span><span class="p">,</span> <span class="n">T</span> <span class="o">*</span><span class="n">partial</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">in</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">N</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numBlocks</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numThreads</span><span class="p">,</span> <span class="n">Op</span> <span class="n">fn</span> <span class="p">);</span>
+
+
+</pre></div>
+
+<ul>
+<li>Smart Random library for random number generation in on device kernels. Use of a default random number that can be called from any part of the code. Smart Random library provides a lightweight wrapper on cuRand library.</li>
+</ul><p>Functions:</p>
+
+<div class="highlight highlight-C++"><pre> <span class="n">__device__</span> <span class="n">curandState</span> <span class="o">*</span><span class="n">defaultStates</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="n">__host__</span> <span class="n">cudaError_t</span> <span class="n">initDefaultRand</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">64</span> <span class="o">*</span> <span class="mi">64</span><span class="p">,</span> <span class="kt">int</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">));</span>
+<span class="n">__host__</span> <span class="n">cudaError_t</span> <span class="nf">releaseDefaultRand</span><span class="p">();</span>
+
+</pre></div>
+
+<p>Usage:</p>
+
+<div class="highlight highlight-C++"><pre><span class="n">initDefaultRand</span><span class="p">(</span><span class="mi">256</span><span class="o">*</span><span class="mi">256</span><span class="p">);</span>
+<span class="p">....</span>
+<span class="c1">////use defaultStates in cuRand calls</span>
+<span class="p">....</span>
+
+<span class="n">releaseDefaultRand</span><span class="p">();</span> <span class="c1">//// called when done using defaultStates to release memory allocated;</span>
+
+</pre></div>
+
+<ul>
+<li>Other Smart Random library functions and kernels</li>
+</ul><div class="highlight highlight-C++"><pre><span class="n">__global__</span> <span class="kt">void</span> <span class="nf">setup_rand_kernel</span><span class="p">(</span><span class="n">curandState</span> <span class="o">*</span><span class="n">state</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">seed</span><span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="n">__global__</span> <span class="kt">void</span> <span class="n">generate_uniform_kernel</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">result</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="n">curandState</span> <span class="o">*</span><span class="n">state</span> <span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="n">__global__</span> <span class="kt">void</span> <span class="n">generate_uniform_range_kernel</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">result</span><span class="p">,</span> <span class="n">T</span> <span class="n">lower</span><span class="p">,</span> <span class="n">T</span> <span class="n">upper</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="n">curandState</span> <span class="o">*</span><span class="n">state</span> <span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> 
+<span class="n">__host__</span> <span class="n">cudaError_t</span> <span class="n">smartRandu</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">dev_Array</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="n">curandState</span> <span class="o">*</span><span class="n">state</span> <span class="o">=</span> <span class="n">defaultStates</span><span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> 
+<span class="n">__host__</span> <span class="n">cudaError_t</span> <span class="n">smartRandu</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">dev_Array</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">sizeX</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">sizeY</span><span class="p">,</span> <span class="n">curandState</span> <span class="o">*</span><span class="n">state</span> <span class="o">=</span> <span class="n">defaultStates</span><span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> 
+<span class="n">__host__</span> <span class="n">cudaError_t</span> <span class="n">smartRandu</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">dev_Array</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">sizeX</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">sizeY</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">sizeZ</span><span class="p">,</span> <span class="n">curandState</span> <span class="o">*</span><span class="n">state</span> <span class="o">=</span> <span class="n">defaultStates</span><span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> 
+<span class="n">__host__</span> <span class="n">cudaError_t</span> <span class="n">smartRandu</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">dev_Array</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">sizeX</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">sizeY</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">sizeZ</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">sizeW</span><span class="p">,</span> <span class="n">curandState</span> <span class="o">*</span><span class="n">state</span> <span class="o">=</span> <span class="n">defaultStates</span><span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> 
+<span class="n">__host__</span> <span class="n">cudaError_t</span> <span class="n">smartRandr</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">dev_Array</span><span class="p">,</span> <span class="n">T</span> <span class="n">min</span><span class="p">,</span> <span class="n">T</span> <span class="n">max</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="n">curandState</span> <span class="o">*</span><span class="n">state</span> <span class="o">=</span> <span class="n">defaultStates</span><span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> 
+<span class="n">__host__</span> <span class="n">cudaError_t</span> <span class="n">smartRandr</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">dev_Array</span><span class="p">,</span> <span class="n">T</span> <span class="n">min</span><span class="p">,</span> <span class="n">T</span> <span class="n">max</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">sizeX</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">sizeY</span><span class="p">,</span> <span class="n">curandState</span> <span class="o">*</span><span class="n">state</span> <span class="o">=</span> <span class="n">defaultStates</span><span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> 
+<span class="n">__host__</span> <span class="n">cudaError_t</span> <span class="n">smartRandr</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">dev_Array</span><span class="p">,</span> <span class="n">T</span> <span class="n">min</span><span class="p">,</span> <span class="n">T</span> <span class="n">max</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">sizeX</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">sizeY</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">sizeZ</span><span class="p">,</span> <span class="n">curandState</span> <span class="o">*</span><span class="n">state</span> <span class="o">=</span> <span class="n">defaultStates</span><span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> 
+<span class="n">__host__</span> <span class="n">cudaError_t</span> <span class="n">smartRandr</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">dev_Array</span><span class="p">,</span> <span class="n">T</span> <span class="n">min</span><span class="p">,</span> <span class="n">T</span> <span class="n">max</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">sizeX</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">sizeY</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">sizeZ</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">sizeW</span><span class="p">,</span> <span class="n">curandState</span> <span class="o">*</span><span class="n">state</span> <span class="o">=</span> <span class="n">defaultStates</span><span class="p">);</span>
+
+
+</pre></div>
+
+<hr><hr><h1>
 <a name="latest-news" class="anchor" href="#latest-news"><span class="octicon octicon-link"></span></a>Latest News</h1>
 
 <ul>
+<li><a href="https://github.com/markamo/Smart-Cuda/releases/tag/v0.2.0">Smart CUDA v0.2.0 (Initial Release) - 18th January, 2014</a></li>
 <li><a href="https://github.com/markamo/Smart-Cuda/releases/tag/v0.1.2">Smart CUDA v0.1.2 (Initial Release) - 19th December, 2013</a></li>
 <li><a href="https://github.com/markamo/Smart-Cuda/releases/tag/v0.1.1">Smart CUDA v0.1.1 (Initial Release) -17th December, 2013</a></li>
 <li><a href="https://github.com/markamo/Smart-Cuda/releases/tag/v0.0.1d">SmartCUDA v 0.0.1(draft-release) - 16th December, 2013</a></li>
@@ -439,7 +618,7 @@
 <ul>
 <li>[-] Smart Kernel</li>
 <li>[-] Smart Device</li>
-<li>[ ] SmartArrayWrapper.apply_func()</li>
+<li>[-] SmartArrayWrapper.apply_func()</li>
 <li>[ ] SmartArrayWrapper.apply_funcAsync()</li>
 <li>[ ] SmartArrayWrapper.sort()</li>
 <li>[ ] SmartArrayWrapper.sortAsync()</li>
@@ -460,7 +639,7 @@
 <h3>
 <a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
 
-<p>Having trouble with Smart CUDA? Check out this <a href="https://github.com/markamo/Smart-Cuda/wiki/Welcome-to-the-Smart-Cuda-v0.1.2-wiki!">Wiki</a>. Visit <a href="http://markamo.github.io/Smart-Cuda/">http://markamo.github.io/Smart-Cuda/</a> or <a href="https://github.com/markamo/Smart-Cuda">https://github.com/markamo/Smart-Cuda</a> for latest news and source codes. Feel free to contact <a href="mailto:smartcuda@outlook.com">smartcuda@outlook.com</a> for additional support.</p>
+<p>Having trouble with Smart CUDA? Check out this <a href="https://github.com/markamo/Smart-Cuda/wiki">Wiki</a>. Visit <a href="http://markamo.github.io/Smart-Cuda/">http://markamo.github.io/Smart-Cuda/</a> or <a href="https://github.com/markamo/Smart-Cuda">https://github.com/markamo/Smart-Cuda</a> for latest news and source codes. Feel free to contact <a href="mailto:smartcuda@outlook.com">smartcuda@outlook.com</a> for additional support.</p>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/markamo">markamo</a></p>
