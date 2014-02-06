@@ -1,4 +1,4 @@
-![Smart CUDA](http://markamo.github.io/Smart-Cuda/logo.png)
+![Smart CUDA](logo.png)
 # Welcome to Smart CUDA Library Project Page
 
 ***
@@ -14,7 +14,7 @@ Even though I am relatively new to C/C++ and CUDA programming, I realized that a
 
 ## Header-only library
 ```C++
-#include "smartCuda\smartCuda_001d.h" ////include smart cuda version 0.0.1 draft
+#include "smartCuda_lib\smartCuda.h" ////include current version of smartCuda
 
 ```
 ## Minimal Learning
@@ -23,6 +23,9 @@ Even though I am relatively new to C/C++ and CUDA programming, I realized that a
 ```C++
 //// memory and data allocation 
 //// smartArray has overloads for allocating up to 4D data
+template <typename T, int mem_loc> 
+	inline T* smartArray(int sizeX);
+	
 template <typename T, int mem_loc> 
 	inline T* smartArray( int sizeX, cudaError_t &cudaStatus);
 
@@ -36,9 +39,9 @@ template <typename T, int mem_loc>
 ```C++
 cudaError_t cudaStatus = cudaSuccess;
 const int arraySize = 100000;
-int* h_a = smartArray<int,smartHost>(arraySize, cudaStatus); ////pageable host memory
-int* hp_a = smartArray<int,smartPinnedHost>(arraySize, cudaStatus); ////pinned host memory
-int* d_a = smartArray<int,smartDevice>(arraySize, cudaStatus); ////device memory 
+int* h_a = smartArray<int,smartHost>(arraySize); ////pageable host memory
+int* hp_a = smartArray<int,smartPinnedHost>(arraySize); ////pinned host memory
+int* d_a = smartArray<int,smartDevice>(arraySize); ////device memory 
 ```
 
 ## Multidimensional array allocation (up to 4D)
@@ -49,16 +52,28 @@ const int lenZ = 5;
 const int lenW = 3;
 
 ////allocation on CPU
-int* h_1D = smartArray<int,smartHost>(lenX, cudaStatus);
-int* h_2D = smartArray<int,smartHost>(lenX, lenY, cudaStatus);
-int* h_3D = smartArray<int,smartHost>(lenX, lenY, lenZ, cudaStatus);
-int* h_4D = smartArray<int,smartHost>(lenX, lenY, lenZ, lenW, cudaStatus);
+int* h_1D = smartArray<int,smartHost>(lenX);
+int* h_2D = smartArray<int,smartHost>(lenX, lenY);
+int* h_3D = smartArray<int,smartHost>(lenX, lenY, lenZ);
+int* h_4D = smartArray<int,smartHost>(lenX, lenY, lenZ, lenW);
 
 ////allocation on GPU
-int* d_1D = smartArray<int,smartDevice>(lenX, cudaStatus);
-int* d_2D = smartArray<int,smartDevice>(lenX, lenY, cudaStatus);
-int* d_3D = smartArray<int,smartDevice>(lenX, lenY, lenZ, cudaStatus);
-int* d_4D = smartArray<int,smartDevice>(lenX, lenY, lenZ, lenW, cudaStatus);
+int* d_1D = smartArray<int,smartDevice>(lenX);
+int* d_2D = smartArray<int,smartDevice>(lenX, lenY);
+int* d_3D = smartArray<int,smartDevice>(lenX, lenY, lenZ);
+int* d_4D = smartArray<int,smartDevice>(lenX, lenY, lenZ, lenW);
+
+////use of inline array to allocate memory in kernels
+int* arr = smartArray<int,smartInlineArray>(arr_size); //create an inline array of size arr_size;
+...
+__global__ void testKernel(int arr_size)
+{
+    int* arr = smartArray<int,smartInlineArray>(arr_size); //create an inline array of size arr_size;
+    ...
+   smartInlineArrayFree(arr);
+
+}
+...
 ```
 ***
 
@@ -135,8 +150,8 @@ wHc = wDc;
 ```C++
 ...
 const int arraySize = 1000;
-int* h_1 = smartArray<int,smartHost>(arraySize,cudaStatus);
-int* h_2 = smartArray<int,smartHost>(arraySize,cudaStatus);
+int* h_1 = smartArray<int,smartHost>(arraySize);
+int* h_2 = smartArray<int,smartHost>(arraySize);
 {
     ////wrap host and device data
     ////use scopeLocal for managing data that is for local scopes
@@ -153,7 +168,7 @@ int* h_2 = smartArray<int,smartHost>(arraySize,cudaStatus);
 //// data for h_2 is preserved because it is global to the scope created. 
 
 //// h_1 must be reinitialized before used again
-h_1 = smartArray<int,smartHost>(arraySize,cudaStatus);
+h_1 = smartArray<int,smartHost>(arraySize);
 
 smartArrayWrapper<int,smartHost> w2(h_1,arraySize,scopeGlobal); 
 ////do some work
@@ -179,6 +194,45 @@ Error:
 
     return cudaStatus;
 ```
+
+
+## Aliases for Thread Indexing  
+
+```C++
+//// alias for __global__ 
+#define __KERNEL__ __global__ 
+
+////indexing along one dimension x,y,z = 0,1,2. default index is along the x dimension (0)
+ // alias for threadIdx.x;
+__device__ inline int __local_index(int dim = 0);
+
+ // alias for blockIdx.x * blockDim.x + threadIdx.x;
+__device__ inline int __global_index(int dim = 0);
+
+ // alias for blockIdx.x;
+__device__ inline int __block_index(int dim = 0);
+__device__ inline int __group_index(int dim = 0);
+
+ // alias for gridDim.x * blockDim.x;
+__device__ inline int __stride(int dim = 0);
+
+////alias functions for size of threads and blocks along the x, y, z and total size in all dimensions (i.e. 0,1,2,-1). The default is the total size along all dimensions (-1).
+
+ // alias for gridDim.x;
+__device__ inline int __num_blocks(int dim = -1 );
+__device__ inline int __num_groups(int dim = -1);
+
+ // alias for gridDim.x;
+__device__ inline int __block_size(int dim = -1);
+__device__ inline int __group_size(int dim = -1);
+__device__ inline int __local_size(int dim = -1);
+
+ // alias for gridDim.x * blockDim.x;
+__device__ inline int __launch_size(int dim = -1);
+__device__ inline int __global_size(int dim = -1);
+
+``` 
+
 
 ## Indexing and Data Access (up to 4D) 
 ```C++
@@ -216,7 +270,7 @@ int results = w4[117];
 ```C++
 ...
 const int arraySize = 1000;
-int* h_1 = smartArray<int,smartHost>(arraySize,cudaStatus);
+int* h_1 = smartArray<int,smartHost>(arraySize);
 ...
 ////wrap array on host
 smartArrayWrapper<int,smartHost> wView2D(h_1,arraySize,scopeLocal);  
@@ -241,7 +295,7 @@ int temp6 = wWiew2D(300); ////access the original h_1 array at index 300 using (
 ```C++
 ...
 const int arraySize = 1000;
-int* d_1 = smartArray<int,smartDevice>(arraySize,cudaStatus);
+int* d_1 = smartArray<int,smartDevice>(arraySize);
 ...
 ////wrap array on device
 smartArrayWrapper<int,smartDevice> wNav(d_1,arraySize,scopeLocal);  
@@ -314,31 +368,223 @@ int nav1 = --wNav; ////returns the value of the previous data element and decrea
 
 
 ```
+***
+# Other Features
+## Smart Device Management 
+```C++
+smartDeviceManager dev;
+dev.mapDevice(0);
+dev.setDevice();
+....
+dev.resetDevice();
+```
+
+## Smart Event Timings
+```C++
+smartEvent stopwatch;
+...
+		
+stopwatch.recStart();
+for (int i = 0; i < arraySize; i++)
+{
+	//// printf("index %d: %d + %d = %d\n", i, wHa[i],wHb[i], wHc[i]);
+	if (wHc(i) < 0)
+	{
+		wHc(i) = wHa(i) + wHb(i);
+	}
+}
+stopwatch.recStop();
+stopwatch.elapsedTime();
+stopwatch.printElapsedTime();
+
+
+```
+
+## Array Initializations
+```C++
+
+const unsigned int arraySize = 10000000;
+int* h_a = smartArray<int,smartHost>(arraySize);
+int* hp_a = smartArray<int,smartPinnedHost>(arraySize);
+int* h_b = smartArray<int,smartHost>(arraySize);
+int* h_c = smartArray<int,smartHost>(arraySize);
+
+....
+idx_initializeSmartArray<int>(h_a,arraySize,0,1);
+idx_initializeSmartArray<int>(h_b,arraySize,-0,1);
+initializeSmartArray<int>(h_c,arraySize,0);
+idx_initializeSmartArray<int>(hp_a,arraySize,0);
+...
+initializeSmartArrayAsync<int>(d_c,arraySize,-100);
+```
+
+## Smart Kernel Configuration (Beta)
+```C++
+const unsigned int arraySize = 10000000;
+....
+smartConfig config(arraySize);
+addKernel<<<config.getBlockSize(), config.getThreadSize()>>>(wDc.inner_ptr(), wDa.inner_ptr(), wDb.inner_ptr(), arraySize);
+
+```
+
+## Smart Random Numbers and Transformations
+* New Kernel function ``` appy_func_core```, perform parallel element wise operations on allocated device arrays
+```C++ 
+template <typename T, class Op> __global__  
+void appy_func_core(T* dev_Array, const int size, Op fn);
+
+template <typename T, class Op> __global__
+ void appy_func_core(T* dest, T* src, const int size, Op fn);
+
+template <typename T, class Op> __global__
+ void appy_func_core(T* dest, T* src1, T* src2, const int size, Op fn);
+
+``` 
+
+* New Kernel function ``` transform_core```, perform parallel element wise transformations on allocated device arrays. Supports up to 10 allocated device arrays
+```C++
+template <typename T, class Op> __global__
+ void transfrom_core(T* arr, const int size, Op fn );
+
+template <typename T, class Op> __global__
+ void transfrom_core(T* arr, T* arr1, T* arr2, const int size, Op fn );
+
+...
+
+template <typename T, class Op> __global__
+ void transfrom_core(T* arr, T* arr1, T* arr2, T* arr3, T* arr4,  T* arr5,  T* arr6, T* arr7, T* arr8, T* arr9, const int size, Op fn );
+
+...
+
+``` 
+
+* New Kernel function ``` transform_core_t```, perform parallel element wise transformations on allocated device arrays of different types. Supports up to 10 allocated device arrays and types
+```C++ 
+template <typename T, class Op> __global__
+ void transfrom_core_t(T* arr, const int size, Op fn );
+
+
+template <typename T, typename T1, typename T2, class Op> __global__
+ void transfrom_core_t(T* arr, T1* arr1, T2* arr2, const int size, Op fn );
+
+...
+
+template <typename T, typename T1, typename T2,  typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, class Op> __global__
+ void transfrom_core_t(T* arr, T1* arr1, T2* arr2, T3* arr3, T4* arr4,  T5* arr5,  T6* arr6, T7* arr7, T8* arr8, T9* arr9, const int size, Op fn );
+
+...
+
+``` 
+
+* Simple Reduction function and function operators for reductions on gpu. Customer implementation of smartOperator can be used with for the reduction kernel.
+
+```C++ 
+////pre-defined operators
+template <typename T> class smartOperator;
+template <typename T> class smartPlus: public smartOperator<T>;
+template <typename T> class smartMultiply: public smartOperator<T>;
+template <typename T> class smartMax: public smartOperator<T>;
+template <typename T> class smartMin: public smartOperator<T>;
+template <typename T> class smartOR: public smartOperator<T>;
+template <typename T> class smartAND: public smartOperator<T>;
+
+////kernel launcher
+template<typename T, class Op>
+void smartReduce_kl(T *answer, T *partial, const T *in, size_t N, int numBlocks, int numThreads, Op fn );
+
+
+``` 
+
+* Smart Random library for random number generation in on device kernels. Use of a default random number that can be called from any part of the code. Smart Random library provides a lightweight wrapper on cuRand library.
+
+Functions:
+```C++ 
+ __device__ curandState *defaultStates;
+...
+__host__ cudaError_t initDefaultRand(int size = 64 * 64, int seed = time(NULL));
+__host__ cudaError_t releaseDefaultRand();
+
+``` 
+
+Usage:
+```C++ 
+initDefaultRand(256*256);
+....
+////use defaultStates in cuRand calls
+....
+
+releaseDefaultRand(); //// called when done using defaultStates to release memory allocated;
+
+``` 
+
+
+* Other Smart Random library functions and kernels
+```C++ 
+__global__ void setup_rand_kernel(curandState *state, unsigned int size, unsigned int seed);
+
+template <typename T>
+__global__ void generate_uniform_kernel(T* result, int size, curandState *state );
+
+template <typename T>
+__global__ void generate_uniform_range_kernel(T* result, T lower, T upper, int size, curandState *state );
+
+template <typename T> 
+__host__ cudaError_t smartRandu(T *dev_Array, const int size, curandState *state = defaultStates);
+
+template <typename T> 
+__host__ cudaError_t smartRandu(T *dev_Array, const int sizeX, const int sizeY, curandState *state = defaultStates);
+
+template <typename T> 
+__host__ cudaError_t smartRandu(T *dev_Array, const int sizeX, const int sizeY, const int sizeZ, curandState *state = defaultStates);
+
+template <typename T> 
+__host__ cudaError_t smartRandu(T *dev_Array, const int sizeX, const int sizeY, const int sizeZ, const int sizeW, curandState *state = defaultStates);
+
+template <typename T> 
+__host__ cudaError_t smartRandr(T *dev_Array, T min, T max, const int size, curandState *state = defaultStates);
+
+template <typename T> 
+__host__ cudaError_t smartRandr(T *dev_Array, T min, T max, const int sizeX, const int sizeY, curandState *state = defaultStates);
+
+template <typename T> 
+__host__ cudaError_t smartRandr(T *dev_Array, T min, T max, const int sizeX, const int sizeY, const int sizeZ, curandState *state = defaultStates);
+
+template <typename T> 
+__host__ cudaError_t smartRandr(T *dev_Array, T min, T max, const int sizeX, const int sizeY, const int sizeZ, const int sizeW, curandState *state = defaultStates);
+
+
+``` 
+
+***
 
 ***
 
 # Latest News
-* SmartCUDA v 0.0.1(draft-release) - 16th December, 2013
+* [Smart CUDA v0.2.0 (Initial Release) - 18th January, 2014](https://github.com/markamo/Smart-Cuda/releases/tag/v0.2.0)
+* [Smart CUDA v0.1.2 (Initial Release) - 19th December, 2013](https://github.com/markamo/Smart-Cuda/releases/tag/v0.1.2)
+* [Smart CUDA v0.1.1 (Initial Release) -17th December, 2013](https://github.com/markamo/Smart-Cuda/releases/tag/v0.1.1)
+* [SmartCUDA v 0.0.1(draft-release) - 16th December, 2013](https://github.com/markamo/Smart-Cuda/releases/tag/v0.0.1d)
+
 
 ### Features under consideration for future releases
-- [ ] Smart Kernel
-- [ ] Smart Device
-- [ ] SmartArrayWrapper.apply_func()
+- [-] Smart Kernel
+- [-] Smart Device
+- [-] SmartArrayWrapper.apply_func()
 - [ ] SmartArrayWrapper.apply_funcAsync()
 - [ ] SmartArrayWrapper.sort()
 - [ ] SmartArrayWrapper.sortAsync()
 - [ ] SmartArrayWrapper.reduce()
 - [ ] SmartArrayWrapper.scan()
 - [ ] Smart Array Wrapper basic mathematical operators
-- [ ] Full integration with STL::array and STL::vector
-- [ ] Full integration with Thrust::host_vector and Thrust::device_vector
+- [-] Full integration with STL::array and STL::vector
+- [-] Full integration with Thrust::host_vector and Thrust::device_vector
 - [ ] Basic integration with OpenCL, OpenMP, TBB, and C++ AMP 
 - [ ] Integration with other CUDA libraries 
-- [ ] Multi-Host and Multi-Device data allocation and management
+- [-] Multi-Host and Multi-Device data allocation and management
 - [ ] Etc.
 
 ### Authors and Contributors
 The original creator of Smart CUDA is Mark Amo-Boateng (@markamo). 
 
 ### Support or Contact
-Having trouble with Smart CUDA? Check out the documentation at http://markamo.github.io/Smart-Cuda/ or https://github.com/markamo/Smart-Cuda or contact smartcuda@outlook.com and we’ll help you sort it out.
+Having trouble with Smart CUDA? Check out this [Wiki] (https://github.com/markamo/Smart-Cuda/wiki). Visit http://markamo.github.io/Smart-Cuda/ or https://github.com/markamo/Smart-Cuda for latest news and source codes. Feel free to contact smartcuda@outlook.com for additional support.
